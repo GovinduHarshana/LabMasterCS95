@@ -7,7 +7,7 @@ public class ChemicalInteraction : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Check if the stick is touching the chemical
-        if (other.CompareTag("Stick"))
+        if (other.CompareTag("StickTip"))
         {
             // Display the UI popup box
             uiBox.SetActive(true);
