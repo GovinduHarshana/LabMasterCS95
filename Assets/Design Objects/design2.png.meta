@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f89d58d80f026ba44978125f228c37af
+guid: 5c54072ba1a823c4298f4aeb8f388dc5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4294126425702302579
-    second: login block_0
+      213: -9162038019701748318
+    second: design2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: login block_0
+      name: design2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1080
-        height: 1350
+        x: 7
+        y: 407
+        width: 3368
+        height: 3299
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d8c756f54c23864c0800000000000000
-      internalID: -4294126425702302579
+      spriteID: 2adcd01b6f6e9d080800000000000000
+      internalID: -9162038019701748318
       vertices: []
       indices: 
       edges: []
