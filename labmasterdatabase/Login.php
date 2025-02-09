@@ -1,21 +1,10 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "labmasterdatabase";
+include ("db.php");
 
 // Variables submitted by user
-$loginUser = $_POST["loginUser"];
-$loginPass = $_POST["loginPass"];
+$loginUser = $_POST["username"];
+$loginPass = $_POST["password"];
 
-// Create connection
-$conn = new mysqli($servername, $username, $password);
-
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully, now we will show the users.<br><br>";
 
 $sql = "SELECT password FROM users WHERE username = '$loginUser'";
 
