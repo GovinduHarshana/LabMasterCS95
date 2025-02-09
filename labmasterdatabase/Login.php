@@ -1,28 +1,25 @@
 <?php
-include ("db.php");
+include("db.php");
 
-// Variables submitted by user
-$loginUser = $_POST["username"];
-$loginPass = $_POST["password"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
+    // Retrieve the hashed password from the database
+    $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($hashedPassword);
+    $stmt->fetch();
+    $stmt->close();
 
-$sql = "SELECT password FROM users WHERE username = '$loginUser'";
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  // Output data of each row
-  while($row = $result->fetch_assoc()) {
-    if ($row["password"] == $loginUser) {
-      echo "Login successful!";
+    // Verify password using password_verify()
+    if ($hashedPassword && password_verify($password, $hashedPassword)) {
+        echo "Login successful!";
     } else {
-      echo "Wrong credentials.";
+        echo "Invalid username or password!";
     }
-  }
-} else {
-  echo "Username does not exist.";
 }
- 
-$conn->close();
 
+$conn->close();
 ?>
