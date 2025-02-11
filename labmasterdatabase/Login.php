@@ -1,39 +1,25 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "labmasterdatabase";
+include("db.php");
 
-// Variables submitted by user
-$loginUser = $_POST["loginUser"];
-$loginPass = $_POST["loginPass"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
-// Create connection
-$conn = new mysqli($servername, $username, $password);
+    // Retrieve the hashed password from the database
+    $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->bind_result($hashedPassword);
+    $stmt->fetch();
+    $stmt->close();
 
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully, now we will show the users.<br><br>";
-
-$sql = "SELECT password FROM users WHERE username = '$loginUser'";
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-  // Output data of each row
-  while($row = $result->fetch_assoc()) {
-    if ($row["password"] == $loginUser) {
-      echo "Login successful!";
+    // Verify password using password_verify()
+    if ($hashedPassword && password_verify($password, $hashedPassword)) {
+        echo "Login successful!";
     } else {
-      echo "Wrong credentials.";
+        echo "Invalid username or password!";
     }
-  }
-} else {
-  echo "Username does not exist.";
 }
- 
-$conn->close();
 
+$conn->close();
 ?>

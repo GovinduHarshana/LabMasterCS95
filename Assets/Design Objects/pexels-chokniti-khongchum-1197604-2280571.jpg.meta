@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 34ff24bd63647da46ab9248425891f58
+guid: ddaa2b1f4a5f0402c8664f78508e8f88
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1091568447662303193
-    second: petri dish02_0
+      213: 2162271150387772016
+    second: pexels-chokniti-khongchum-1197604-2280571_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: petri dish02_0
+      name: pexels-chokniti-khongchum-1197604-2280571_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 2
-        width: 1235
-        height: 447
+        x: 0
+        y: 0
+        width: 6016
+        height: 4016
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 728501db748f9d0f0800000000000000
-      internalID: -1091568447662303193
+      spriteID: 07a30f2b72ee10e10800000000000000
+      internalID: 2162271150387772016
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      petri dish02_0: -1091568447662303193
+      pexels-chokniti-khongchum-1197604-2280571_0: 2162271150387772016
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
