@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2025 at 05:35 PM
+-- Generation Time: Feb 15, 2025 at 03:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -24,22 +24,42 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `practical_notes`
+--
+
+CREATE TABLE `practical_notes` (
+  `noteId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `practicalId` int(11) NOT NULL,
+  `generatedNote` text NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `userId` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
-  `password` varchar(255) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `email` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
   `dob` date NOT NULL,
-  `userRole` enum('Student','Teacher') NOT NULL
+  `userRole` enum('Student','Teacher','Work for a institute','Other') NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `practical_notes`
+--
+ALTER TABLE `practical_notes`
+  ADD PRIMARY KEY (`noteId`);
 
 --
 -- Indexes for table `users`
@@ -52,10 +72,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `practical_notes`
+--
+ALTER TABLE `practical_notes`
+  MODIFY `noteId` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
