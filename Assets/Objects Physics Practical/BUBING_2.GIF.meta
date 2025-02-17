@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      BUBING_2_0: -2552674905631770359
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
