@@ -1,16 +1,7 @@
 using UnityEngine;
 
-public class QuizSO : MonoBehaviour
+[CreateAssetMenu(fileName = "QuizSO", menuName = "Quiz/QuizSO")]
+public class QuizSO : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public QuizData[] quizData;
 }

@@ -1,16 +1,10 @@
-using UnityEngine;
+using System;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+[Serializable]
+public class QuizData
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string question;
+    public string[] answers;
+    public int correctAnswerIndex;
+    public string explanation;
 }
