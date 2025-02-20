@@ -3160,6 +3160,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1855173900}
+  - component: {fileID: 1855173901}
   m_Layer: 0
   m_Name: Pop Up Box
   m_TagString: Untagged
@@ -3182,6 +3183,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1855173901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855173899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3549edd18dc8741ba9c0fa2ffcd21f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupPanel: {fileID: 2015742463}
+  popupMessage: {fileID: 1785333816}
+  addButton: {fileID: 1587713416}
+  cancelButton: {fileID: 990056313}
 --- !u!1 &1927169840
 GameObject:
   m_ObjectHideFlags: 0
@@ -3563,7 +3580,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2136060986}
-  - component: {fileID: 2136060987}
   m_Layer: 0
   m_Name: Weight Popup Box
   m_TagString: Untagged
@@ -3587,22 +3603,6 @@ Transform:
   - {fileID: 1514190230}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2136060987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136060985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b3549edd18dc8741ba9c0fa2ffcd21f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  popupPanel: {fileID: 2015742463}
-  popupText: {fileID: 0}
-  addButton: {fileID: 1587713416}
-  cancelButton: {fileID: 990056313}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
