@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 18409183}
   - component: {fileID: 18409182}
   m_Layer: 5
-  m_Name: Question
+  m_Name: QuestionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -339,8 +339,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 58
-  m_fontSizeBase: 58
+  m_fontSize: 65
+  m_fontSizeBase: 65
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -34.690094, y: 0, z: -748.7336, w: 0}
+  m_margin: {x: -112.544556, y: -26.84627, z: -697.7258, w: -13.423277}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -561,10 +561,10 @@ RectTransform:
   - {fileID: 2103220780}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -250}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &134116655
 MonoBehaviour:
@@ -638,10 +638,10 @@ RectTransform:
   - {fileID: 1427547978}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -460}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &141053410
 MonoBehaviour:
@@ -715,10 +715,10 @@ RectTransform:
   - {fileID: 923312245}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -390}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &179275981
 MonoBehaviour:
@@ -1189,10 +1189,10 @@ RectTransform:
   - {fileID: 1877565169}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -110}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &286865515
 MonoBehaviour:
@@ -1266,10 +1266,10 @@ RectTransform:
   - {fileID: 1609741745}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -600}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &336391937
 MonoBehaviour:
@@ -2374,10 +2374,10 @@ RectTransform:
   - {fileID: 209815553}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -530}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &463521211
 MonoBehaviour:
@@ -2838,6 +2838,7 @@ GameObject:
   - component: {fileID: 546538339}
   - component: {fileID: 546538338}
   - component: {fileID: 546538340}
+  - component: {fileID: 546538341}
   m_Layer: 5
   m_Name: ChemicalTable
   m_TagString: Untagged
@@ -2935,6 +2936,36 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 1
   m_ConstraintCount: 1
+--- !u!114 &546538341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 546538336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3714d5a6c3fe7749959c071aa8d79d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chemicalNameTexts:
+  - {fileID: 1579637826}
+  - {fileID: 736188737}
+  - {fileID: 18257067}
+  - {fileID: 1321793517}
+  - {fileID: 937188396}
+  - {fileID: 368627693}
+  - {fileID: 1755882823}
+  - {fileID: 749328788}
+  chemicalColorTexts:
+  - {fileID: 1877565170}
+  - {fileID: 487609896}
+  - {fileID: 2103220781}
+  - {fileID: 2107497490}
+  - {fileID: 923312246}
+  - {fileID: 1427547979}
+  - {fileID: 209815554}
+  - {fileID: 1609741746}
 --- !u!1 &552586731
 GameObject:
   m_ObjectHideFlags: 0
@@ -4066,7 +4097,7 @@ GameObject:
   - component: {fileID: 766474291}
   - component: {fileID: 766474290}
   m_Layer: 5
-  m_Name: 'No Button '
+  m_Name: 'CancelButton '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4081,7 +4112,7 @@ RectTransform:
   m_GameObject: {fileID: 766474288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.2497625, y: 2.5230887, z: 2.5230887}
+  m_LocalScale: {x: 2.6209733, y: 2.9393983, z: 2.9393983}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1689406367}
@@ -4089,7 +4120,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 221.666, y: -75}
+  m_AnchoredPosition: {x: 257, y: -75}
   m_SizeDelta: {x: 144.311, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &766474290
@@ -5466,10 +5497,10 @@ RectTransform:
   - {fileID: 2107497489}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -320}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &945276715
 MonoBehaviour:
@@ -7386,7 +7417,7 @@ GameObject:
   - component: {fileID: 1267411828}
   - component: {fileID: 1267411827}
   m_Layer: 5
-  m_Name: Yes
+  m_Name: PickText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7431,7 +7462,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Yes
+  m_text: Pick
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8164,6 +8195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultFlameColor: {r: 0, g: 1, b: 1, a: 1}
+  tableManager: {fileID: 546538341}
 --- !u!50 &1557079413
 Rigidbody2D:
   serializedVersion: 5
@@ -8559,8 +8591,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 205, y: 0}
-  m_SizeDelta: {x: -180.6852, y: -169.694}
+  m_AnchoredPosition: {x: 108.98657, y: -6.257202}
+  m_SizeDelta: {x: -630.1232, y: -402.0416}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602387248
 MonoBehaviour:
@@ -8575,7 +8607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.27450982, g: 0.078431375, b: 0.099, a: 0.69411767}
+  m_Color: {r: 0.078431375, g: 0.16387247, b: 0.27450982, a: 0.7607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8648,10 +8680,10 @@ RectTransform:
   - {fileID: 487609895}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -180}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1606551157
 MonoBehaviour:
@@ -9728,7 +9760,7 @@ GameObject:
   - component: {fileID: 1689406369}
   - component: {fileID: 1689406368}
   m_Layer: 5
-  m_Name: No
+  m_Name: CancelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9773,7 +9805,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No
+  m_text: Cancel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10780,10 +10812,10 @@ RectTransform:
   - {fileID: 876473343}
   m_Father: {fileID: 546538337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 235, y: -40}
+  m_SizeDelta: {x: 450, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824479074
 MonoBehaviour:
@@ -12047,7 +12079,7 @@ GameObject:
   - component: {fileID: 2004921612}
   - component: {fileID: 2004921611}
   m_Layer: 5
-  m_Name: Yes Button
+  m_Name: PickButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12062,7 +12094,7 @@ RectTransform:
   m_GameObject: {fileID: 2004921609}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.2497625, y: 2.5230887, z: 2.5230887}
+  m_LocalScale: {x: 2.6209733, y: 2.9393983, z: 2.9393983}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1267411826}
@@ -12070,7 +12102,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -217.606, y: -75}
+  m_AnchoredPosition: {x: -279, y: -75}
   m_SizeDelta: {x: 146.451, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2004921611
@@ -13013,7 +13045,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2113070083
 MonoBehaviour:
   m_ObjectHideFlags: 0

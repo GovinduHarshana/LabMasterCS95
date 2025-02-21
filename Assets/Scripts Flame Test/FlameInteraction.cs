@@ -1,9 +1,11 @@
 using UnityEngine;
+using TMPro;
 
 public class FlameInteraction : MonoBehaviour
 {
-    public Color defaultFlameColor = new Color(0f, 1f, 1f); // Default flame color
+    public Color defaultFlameColor = Color.white;
     private SpriteRenderer flameRenderer;
+    public ChemicalTableManager tableManager;
 
     private void Start()
     {
@@ -17,19 +19,19 @@ public class FlameInteraction : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter2D called with: " + other.name); // Check if the method is triggered
-
+        // Check if the stick tip is touching the flame
         if (other.CompareTag("StickTip"))
         {
-            Debug.Log("StickTip detected!"); // Verify the tag check
+            // Change the flame color to the selected chemical color
             if (flameRenderer != null)
             {
-                Debug.Log("Selected Chemical Color: " + ChemicalData.Instance.SelectedChemicalColor); // Check the color
                 flameRenderer.color = ChemicalData.Instance.SelectedChemicalColor;
             }
-            else
+
+            // Update the table based on the selected chemical color
+            if (tableManager != null)
             {
-                Debug.LogError("Flame Renderer is null!");
+                tableManager.UpdateTable(ChemicalData.Instance.SelectedChemicalColor);
             }
         }
     }
