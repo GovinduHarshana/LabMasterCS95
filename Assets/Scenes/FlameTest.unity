@@ -8584,7 +8584,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 108.98657, y: -6.257202}
+  m_AnchoredPosition: {x: 14, y: -6.257202}
   m_SizeDelta: {x: -630.1232, y: -402.0416}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602387248
@@ -8876,7 +8876,7 @@ GameObject:
   - component: {fileID: 1657217020}
   m_Layer: 0
   m_Name: Chemical4
-  m_TagString: Untagged
+  m_TagString: Chemical4
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
