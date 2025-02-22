@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject uiBox; // Reference to the UI popup box
-    public PickChemical pickChemical; // Reference to the PickChemical script
+    public GameObject uiBox;
+    public PickChemical pickChemical;
 
     // Called when the "Pick" button is clicked
     public void OnPickButtonClick()

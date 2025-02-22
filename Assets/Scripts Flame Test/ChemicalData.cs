@@ -5,6 +5,7 @@ public class ChemicalData : MonoBehaviour
     public static ChemicalData Instance;
 
     public Color SelectedChemicalColor { get; set; } = Color.white;
+    public string SelectedChemicalName { get; set; } = "";
 
     private void Awake()
     {

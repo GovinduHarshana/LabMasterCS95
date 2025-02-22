@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChemicalInteraction : MonoBehaviour
 {
-    public GameObject uiBox; // Reference to the UI popup box
+    public GameObject uiBox;
 
     private void OnTriggerEnter2D(Collider2D other)
     {

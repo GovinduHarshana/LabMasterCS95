@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class PickChemical : MonoBehaviour
 {
-    public GameObject stick; // Reference to the stick GameObject
-    public Color defaultStickColor = Color.gray; // Default color of the stick
-    public UIController uiController; // Reference to the UIController script
+    public GameObject stick;
+    public Color defaultStickColor = Color.gray;
+    public UIController uiController;
+    public FlameTestTable flameTestTable;
 
-    // Called when the "Pick" button is clicked
     public void OnPickButtonClick()
     {
         if (stick != null)
@@ -31,8 +31,6 @@ public class PickChemical : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        string chemicalName = other.tag;
-        Color flameColor = Color.white;
 
         if (other.CompareTag("Chemical1"))
         {

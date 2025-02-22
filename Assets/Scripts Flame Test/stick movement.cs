@@ -6,10 +6,10 @@ public class StickController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0)) // Left mouse button or touch
+        if (Input.GetMouseButton(0)) // Left mouse button
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0; // Ensure no depth movement
+            mousePos.z = 0;
             transform.position = Vector3.MoveTowards(transform.position, mousePos, moveSpeed * Time.deltaTime);
         }
     }
