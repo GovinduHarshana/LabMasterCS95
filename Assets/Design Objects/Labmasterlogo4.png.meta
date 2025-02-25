@@ -117,6 +117,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -309,7 +322,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Labmasterlogo4_0: 5849566671403084302
+      Labmasterlogo4_1: 7196342078927428648
+      Labmasterlogo4_2: 2590247288046483691
+      Labmasterlogo4_3: 2871542954776846438
+      Labmasterlogo4_4: -7048440303242425820
+      Labmasterlogo4_5: -3545860740459787386
+      Labmasterlogo4_6: -1962220866097894489
+      Labmasterlogo4_7: 7391831493726484577
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
