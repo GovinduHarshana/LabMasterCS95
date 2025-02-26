@@ -12,7 +12,7 @@ app.use(cors());
 
 // Set up the port and MongoDB URI from environment variables
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://practise:LabmasterCS95@cluster0.qod8u.mongodb.net/LabMaster";
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://labmasterAdmin:LabmasterCS95@labmastercluster.urqii.mongodb.net/LabMaster";
 
 // Connect to MongoDB with improved error handling
 mongoose.connect(MONGO_URI, {})
