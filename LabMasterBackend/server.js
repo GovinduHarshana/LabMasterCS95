@@ -72,21 +72,27 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
 
-        // Validate credentials
-        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-            return res.status(400).json({ message: "Invalid credentials" });
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
         }
 
-        // Sign JWT token
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "your_secret_key", { expiresIn: "1h" });
-        res.status(200).json({ token, userRole: user.userRole });
+        // Compare provided password with stored hashed password
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect password" });
+        }
+        
+        res.status(200).json({ message: "Login successful" });
+
     } catch (error) {
-        console.error(error);  // Log the error for debugging
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
+
+
 
 // Middleware to catch invalid JSON
 app.use((err, req, res, next) => {
