@@ -4,12 +4,13 @@ using UnityEngine.Networking;
 using TMPro;
 using System.Text;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
 
 public class MongoDBManager : MonoBehaviour
 {
     public TMP_InputField emailField, nameField, dobField, passwordField, rePasswordField;
     public TMP_Dropdown userRoleDropdown;
-    public TMP_Text errorText; // Reference to the UI text element for displaying errors
+    public TMP_Text errorMessageText;
     public string serverUrl = "http://localhost:5000";
 
     // Method for signup
@@ -20,14 +21,49 @@ public class MongoDBManager : MonoBehaviour
 
     IEnumerator SignupCoroutine()
     {
+        // Trim input fields to remove accidental spaces
+        string email = emailField.text.Trim();
+        string name = nameField.text.Trim();
+        string dob = dobField.text.Trim();
+        string password = passwordField.text.Trim();
+        string rePassword = rePasswordField.text.Trim();
+        string userRole = userRoleDropdown.options[userRoleDropdown.value].text.Trim();
+
+        // Validation for empty fields
+        if (string.IsNullOrEmpty(email) ||
+            string.IsNullOrEmpty(name) ||
+            string.IsNullOrEmpty(dob) ||
+            string.IsNullOrEmpty(userRole) ||
+            string.IsNullOrEmpty(password) ||
+            string.IsNullOrEmpty(rePassword))
+        {
+            DisplayError("❌ All fields are required. Please fill in all the fields.");
+            yield break;
+        }
+
+        // Email format validation
+        if (!IsValidEmail(email))
+        {
+            DisplayError("❌ Invalid email format. Please enter a valid email.");
+            yield break;
+        }
+
+        // Check if passwords match
+        if (password != rePassword)
+        {
+            DisplayError("❌ Passwords do not match. Please try again.");
+            yield break;
+        }
+
+        // Create JSON object for signup request
         string jsonData = JsonUtility.ToJson(new SignupData
         {
-            email = emailField.text,
-            name = nameField.text,
-            dob = dobField.text,
-            userRole = userRoleDropdown.options[userRoleDropdown.value].text,
-            password = passwordField.text,
-            rePassword = rePasswordField.text
+            email = email,
+            name = name,
+            dob = dob,
+            userRole = userRole,
+            password = password,
+            rePassword = rePassword
         });
 
         using (UnityWebRequest www = new UnityWebRequest(serverUrl + "/signup", "POST"))
@@ -41,29 +77,24 @@ public class MongoDBManager : MonoBehaviour
 
             if (www.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log("✅ Signup Success: " + www.downloadHandler.text);
-                SceneManager.LoadScene("LoginPage"); // Redirect to login page after successful signup
-            }
-            else
-            {
-                // Handle error messages based on backend response
-                string errorMessage = www.downloadHandler.text;
-                if (errorMessage.Contains("All fields are required"))
+                string responseText = www.downloadHandler.text;
+                Debug.Log("✅ Signup Success: " + responseText);
+
+                if (responseText.Contains("User registered successfully"))
                 {
-                    DisplayError("❌ All fields are required. Please fill in all the fields.");
-                }
-                else if (errorMessage.Contains("Passwords do not match"))
-                {
-                    DisplayError("❌ Passwords do not match. Please try again.");
-                }
-                else if (errorMessage.Contains("User already exists"))
-                {
-                    DisplayError("❌ User already exists. Please try a different email.");
+                    Debug.Log("✅ Signup Successful!");
+                    SceneManager.LoadScene("LoginPage");
                 }
                 else
                 {
-                    DisplayError("❌ Signup failed. " + errorMessage);
+                    DisplayError("❌ Unexpected error. Please try again.");
                 }
+            }
+            else
+            {
+                string errorMessage = www.downloadHandler.text;
+                Debug.LogError("❌ Signup Error: " + errorMessage);
+                DisplayError("❌ Signup failed. Please try again.");
             }
         }
     }
@@ -76,10 +107,20 @@ public class MongoDBManager : MonoBehaviour
 
     IEnumerator LoginCoroutine()
     {
+        string email = emailField.text.Trim();
+        string password = passwordField.text.Trim();
+
+        // Validation for empty fields
+        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+        {
+            DisplayError("❌ Email and password are required.");
+            yield break;
+        }
+
         string jsonData = JsonUtility.ToJson(new LoginData
         {
-            email = emailField.text,
-            password = passwordField.text
+            email = email,
+            password = password
         });
 
         using (UnityWebRequest www = new UnityWebRequest(serverUrl + "/login", "POST"))
@@ -94,15 +135,24 @@ public class MongoDBManager : MonoBehaviour
             if (www.result == UnityWebRequest.Result.Success)
             {
                 string responseText = www.downloadHandler.text;
-                Debug.Log("Server Response: " + responseText);  // Log the full response text
+                Debug.Log("✅ Server Response: " + responseText);
 
-                // Handle the server response
                 if (responseText.Contains("Login successful"))
                 {
                     Debug.Log("✅ Login Successful!");
                     SceneManager.LoadScene("HomePage");
                 }
-                else if (responseText.Contains("User not found"))
+                else
+                {
+                    DisplayError("❌ Unexpected error. Please try again.");
+                }
+            }
+            else if (www.responseCode == 400)
+            {
+                string responseText = www.downloadHandler.text;
+                Debug.Log("❌ Server Response: " + responseText);
+
+                if (responseText.Contains("User not found"))
                 {
                     DisplayError("❌ Login Failed: User not found.");
                 }
@@ -112,23 +162,32 @@ public class MongoDBManager : MonoBehaviour
                 }
                 else
                 {
-                    DisplayError("❌ Login Failed: Unexpected error.");
+                    DisplayError("❌ Login Failed: Unknown error.");
                 }
             }
             else
             {
-                // This is for unexpected errors (e.g., network issues)
-                DisplayError("❌ Login Request Failed: " + www.error);
+                Debug.LogError("❌ Login Request Failed: " + www.error);
+                DisplayError("❌ Unable to connect to the server. Please try again.");
             }
         }
     }
 
-
-    // Method to display error messages on the screen
-    private void DisplayError(string message)
+    void DisplayError(string message)
     {
-        errorText.text = message; // Update the UI text to show the error message
-        errorText.color = Color.red; // Change the text color to red for error messages
+        if (errorMessageText != null)
+        {
+            errorMessageText.text = message;
+        }
+        Debug.LogError(message);
+    }
+
+    // Email validation function using regex
+    bool IsValidEmail(string email)
+    {
+        string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+        Regex regex = new Regex(pattern);
+        return regex.IsMatch(email);
     }
 }
 
