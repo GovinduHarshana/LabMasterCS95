@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class QuizManager : MonoBehaviour
+public class QuizManagerNew : MonoBehaviour
 {
 
     public QuizSO quizSO;
