@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const app = express();
 app.use(express.json());
@@ -14,12 +15,12 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://labmasterAdmin:LabmasterCS95@labmastercluster.urqii.mongodb.net/LabMaster";
 
-// Connect to MongoDB with improved error handling
+// Connect to MongoDB
 mongoose.connect(MONGO_URI, {})
-  .then(() => console.log("MongoDB connected"))
+  .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1); // Terminate the process if MongoDB connection fails
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1); // Terminate if connection fails
   });
 
 // User Schema
@@ -29,33 +30,40 @@ const UserSchema = new mongoose.Schema({
     dob: { type: String, required: true },
     userRole: { type: String, required: true, enum: ["Student", "Teacher", "Institute", "Other"] },
     passwordHash: { type: String, required: true },
+    resetToken: { type: String, default: null },
+    resetTokenExpiry: { type: Date, default: null },
     createdAt: { type: Date, default: Date.now }
 });
 
 const User = mongoose.model("User", UserSchema);
+
+// Nodemailer Transporter (Update with real credentials)
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,  // Use environment variables for security
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 // Signup API
 app.post("/signup", async (req, res) => {
     try {
         const { email, name, dob, userRole, password, rePassword } = req.body;
 
-        // Validate input fields
         if (!email || !name || !dob || !userRole || !password || !rePassword) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Check if passwords match
         if (password !== rePassword) {
             return res.status(400).json({ message: "Passwords do not match" });
         }
 
-        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ email, name, dob, userRole, passwordHash: hashedPassword });
 
@@ -63,7 +71,7 @@ app.post("/signup", async (req, res) => {
         res.status(201).json({ message: "User registered successfully" });
 
     } catch (error) {
-        console.error(error);  // Log the error for debugging
+        console.error(error);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
@@ -72,18 +80,81 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
 
-        // Validate credentials
-        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-            return res.status(400).json({ message: "Invalid credentials" });
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
         }
 
-        // Sign JWT token
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "your_secret_key", { expiresIn: "1h" });
-        res.status(200).json({ token, userRole: user.userRole });
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Incorrect password" });
+        }
+
+        res.status(200).json({ message: "Login successful" });
+
     } catch (error) {
-        console.error(error);  // Log the error for debugging
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+});
+
+// Forgot Password API
+app.post("/forgot-password", async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Generate Reset Token (expires in 1 hour)
+        const resetToken = crypto.randomBytes(20).toString("hex");
+        user.resetToken = resetToken;
+        user.resetTokenExpiry = Date.now() + 3600000; 
+
+        await user.save();
+
+        // Send Email with Reset Link
+        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "Password Reset Request",
+            text: `Click this link to reset your password: ${resetLink}`
+        };
+
+        transporter.sendMail(mailOptions, (error) => {
+            if (error) {
+                return res.status(500).json({ message: "Failed to send email" });
+            }
+            res.json({ message: "Password reset email sent" });
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+});
+
+// Reset Password API
+app.post("/reset-password", async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired token" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.passwordHash = hashedPassword;
+        user.resetToken = null;
+        user.resetTokenExpiry = null;
+
+        await user.save();
+        res.json({ message: "Password has been reset successfully" });
+
+    } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
@@ -96,7 +167,7 @@ app.use((err, req, res, next) => {
     next();
 });
 
-// Start the server
+// Start Server
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });
