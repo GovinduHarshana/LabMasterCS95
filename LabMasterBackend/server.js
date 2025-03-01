@@ -39,12 +39,15 @@ const User = mongoose.model("User", UserSchema);
 
 // Nodemailer Transporter (Update with real credentials)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
+    secure: true, // Use SSL
+    port: 465, // Change from 587 to 465
     auth: {
-        user: process.env.EMAIL_USER,  // Use environment variables for security
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
 });
+
 
 // Signup API
 app.post("/signup", async (req, res) => {
@@ -124,12 +127,14 @@ app.post("/forgot-password", async (req, res) => {
             text: `Click this link to reset your password: ${resetLink}`
         };
 
-        transporter.sendMail(mailOptions, (error) => {
+        transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                return res.status(500).json({ message: "Failed to send email" });
+                console.error("❌ Email error:", error);
+                return res.status(500).json({ message: "Failed to send email", error: error.message });
             }
+            console.log("✅ Email sent:", info.response);
             res.json({ message: "Password reset email sent" });
-        });
+        });      
 
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
