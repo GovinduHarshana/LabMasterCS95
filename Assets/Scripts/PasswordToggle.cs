@@ -1,42 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PasswordToggle : MonoBehaviour
 {
-    public Button toggleButton;     // Reference to the button with the eye icon
-    public Image buttonImage;       // Reference to the button's Image component
-    public Sprite openEyeSprite;    // Open eye icon (password visible)
-    public Sprite closedEyeSprite;  // Closed eye icon (password hidden)
-    public InputField passwordField; // Reference to the InputField for password
+    public TMP_InputField passwordField;
+    public Button eyeButton;
+    public Image eyeIcon;
+    public Sprite openEyeSprite;
+    public Sprite closedEyeSprite;
 
     private bool isPasswordVisible = false;
 
-    void Start()
-    {
-        // Initialize button with the closed eye icon
-        buttonImage.sprite = closedEyeSprite;
-
-        // Add listener to the button
-        toggleButton.onClick.AddListener(TogglePassword);
-    }
-
-    void TogglePassword()
+    public void TogglePasswordVisibility()
     {
         isPasswordVisible = !isPasswordVisible;
 
-        // Toggle password visibility
-        if (isPasswordVisible)
+        // Toggle password field content type
+        passwordField.contentType = isPasswordVisible ? TMP_InputField.ContentType.Standard : TMP_InputField.ContentType.Password;
+        passwordField.ForceLabelUpdate(); // Refresh text field
+
+        // Debugging message
+        Debug.Log("Password Visibility: " + isPasswordVisible);
+
+        // Update the eye icon
+        if (eyeIcon != null)
         {
-            passwordField.contentType = InputField.ContentType.Standard; // Show password
-            buttonImage.sprite = openEyeSprite;  // Change icon to open eye
-        }
-        else
-        {
-            passwordField.contentType = InputField.ContentType.Password; // Hide password
-            buttonImage.sprite = closedEyeSprite;  // Change icon to closed eye
+            eyeIcon.sprite = isPasswordVisible ? openEyeSprite : closedEyeSprite;
+            eyeIcon.rectTransform.sizeDelta = new Vector2(20f, 10f); // Set fixed size
         }
 
-        // Force the InputField to update its display
-        passwordField.ForceLabelUpdate();
     }
 }
