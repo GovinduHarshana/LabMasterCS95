@@ -6,14 +6,14 @@ TagManager:
   tags:
   - Stick
   - StickTip
-  - Chemical1
-  - Chemical2
-  - Chemical3
-  - Chemical4
-  - Chemical5
-  - Chemical6
-  - Chemical7
-  - Chemical8
+  - Chemical01
+  - Chemical02
+  - Chemical03
+  - Chemical04
+  - Chemical05
+  - Chemical06
+  - Chemical07
+  - Chemical08
   layers:
   - Default
   - TransparentFX
