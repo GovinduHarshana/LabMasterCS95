@@ -112,11 +112,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
 --- !u!1 &1079079952
-========
---- !u!1 &161291305
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,15 +120,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
   - component: {fileID: 1079079957}
   - component: {fileID: 1079079956}
   - component: {fileID: 1079079953}
-========
-  - component: {fileID: 161291308}
-  - component: {fileID: 161291307}
-  - component: {fileID: 161291306}
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -140,35 +130,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
 --- !u!81 &1079079953
-========
---- !u!81 &161291306
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
   m_GameObject: {fileID: 1079079952}
   m_Enabled: 1
 --- !u!20 &1079079956
-========
-  m_GameObject: {fileID: 161291305}
-  m_Enabled: 1
---- !u!20 &161291307
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
   m_GameObject: {fileID: 1079079952}
-========
-  m_GameObject: {fileID: 161291305}
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -204,22 +180,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
 --- !u!4 &1079079957
-========
---- !u!4 &161291308
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
   m_GameObject: {fileID: 1079079952}
-========
-  m_GameObject: {fileID: 161291305}
-  serializedVersion: 2
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -28.517307}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -230,7 +197,6 @@ Transform:
 --- !u!1 &1888731522
 GameObject:
   m_ObjectHideFlags: 0
-<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/21 - Script Example.unity
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -271,7 +237,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-========
-  m_Roots:
-  - {fileID: 161291308}
->>>>>>>> Test_Main:Assets/Scenes/Test_Main_Scene.unity

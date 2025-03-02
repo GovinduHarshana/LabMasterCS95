@@ -4,7 +4,7 @@
 TagManager:
   serializedVersion: 3
   tags:
-
+  - Weight
   layers:
   - Default
   - TransparentFX
@@ -43,7 +43,7 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: mid
- Test_Main
+    uniqueID: 3103023033
     locked: 0
   m_RenderingLayers:
   - Default
