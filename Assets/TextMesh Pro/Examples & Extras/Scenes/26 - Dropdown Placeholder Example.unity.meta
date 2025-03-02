@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/TextMesh Pro/Examples & Extras/Scenes/26 - Dropdown Placeholder Example.unity.meta
 guid: 0851605490a599b46b6ac5cb681d93ea
+========
+guid: f8fe4c48c37ebdf4ea5b726e48440bb5
+>>>>>>>> Test_Main:Assets/Scenes/QuizSonometer.unity.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
