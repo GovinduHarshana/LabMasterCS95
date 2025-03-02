@@ -1,51 +1,77 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+using System.Text;
 using UnityEngine.Networking;
 
 public class ForgotPasswordManager : MonoBehaviour
 {
-    public InputField emailInputField;  // UI input field for email
-    public Text responseText;           // UI text to display response message
-    private string apiUrl = "http://localhost:5000/forgot-password";  // Update if using a remote server
+    public TMP_InputField emailInput;   // Email input field
+    public TMP_Text errorMessageText;   // Text to show errors
+    public TMP_Text successMessageText; // Text to show success message
+    public Button sendButton;           // Send button
 
-    public void SendPasswordResetRequest()
+    private string forgotPasswordURL = "http://localhost:5000/forgot-password";
+
+    void Start()
     {
-        string email = emailInputField.text.Trim();
+        errorMessageText.text = "";
+        successMessageText.text = "";
+        sendButton.onClick.AddListener(OnSendButtonClicked);
+    }
+
+    void OnSendButtonClicked()
+    {
+        string email = emailInput.text.Trim();
 
         if (string.IsNullOrEmpty(email))
         {
-            responseText.text = "⚠️ Please enter your email!";
+            errorMessageText.text = "Email is required.";
+            successMessageText.text = "";
             return;
         }
 
-        StartCoroutine(ForgotPasswordRequest(email));
+        if (!IsValidEmail(email))
+        {
+            errorMessageText.text = "Invalid email format.";
+            successMessageText.text = "";
+            return;
+        }
+
+        errorMessageText.text = "";
+        StartCoroutine(SendForgotPasswordRequest(email));
     }
 
-    private IEnumerator ForgotPasswordRequest(string email)
+    bool IsValidEmail(string email)
     {
-        // Create JSON data
-        string jsonData = "{\"email\":\"" + email + "\"}";
-        byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        return System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
 
-        // Setup request
-        using (UnityWebRequest request = new UnityWebRequest(apiUrl, "POST"))
+    IEnumerator SendForgotPasswordRequest(string email)
+    {
+        // Create JSON payload
+        string jsonData = "{\"email\": \"" + email + "\"}";
+        byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonData);
+
+        // Create request
+        UnityWebRequest request = new UnityWebRequest(forgotPasswordURL, "POST");
+        request.uploadHandler = new UploadHandlerRaw(jsonBytes);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        // Send request
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            request.uploadHandler = new UploadHandlerRaw(postData);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            // Send request
-            yield return request.SendWebRequest();
-
-            if (request.result == UnityWebRequest.Result.Success)
-            {
-                responseText.text = "✅ Reset link sent! Check your email.";
-            }
-            else
-            {
-                responseText.text = "❌ Error: " + request.downloadHandler.text;
-            }
+            successMessageText.text = "Check your email for the reset link!";
+            errorMessageText.text = "";
+        }
+        else
+        {
+            successMessageText.text = "";
+            errorMessageText.text = "User not found.";
         }
     }
 }

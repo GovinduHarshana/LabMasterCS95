@@ -3,51 +3,40 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const User = require("./models/User");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Set up the port and MongoDB URI from environment variables
+// MongoDB Connection
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://labmasterAdmin:LabmasterCS95@labmastercluster.urqii.mongodb.net/LabMaster";
+const MONGO_URI = process.env.MONGO_URI;
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI, {})
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
-    process.exit(1); // Terminate if connection fails
+    process.exit(1);
   });
 
-// User Schema
-const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    dob: { type: String, required: true },
-    userRole: { type: String, required: true, enum: ["Student", "Teacher", "Institute", "Other"] },
-    passwordHash: { type: String, required: true },
-    resetToken: { type: String, default: null },
-    resetTokenExpiry: { type: Date, default: null },
-    createdAt: { type: Date, default: Date.now }
-});
-
-const User = mongoose.model("User", UserSchema);
-
-// Nodemailer Transporter (Update with real credentials)
+// Nodemailer Transporter
 const transporter = nodemailer.createTransport({
     service: "gmail",
-    secure: true, // Use SSL
-    port: 465, // Change from 587 to 465
+    secure: true,
+    port: 465,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
 });
 
+// Password Validation Function
+const isValidPassword = (password) => {
+    return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+};
 
 // Signup API
 app.post("/signup", async (req, res) => {
@@ -57,9 +46,11 @@ app.post("/signup", async (req, res) => {
         if (!email || !name || !dob || !userRole || !password || !rePassword) {
             return res.status(400).json({ message: "All fields are required" });
         }
-
         if (password !== rePassword) {
             return res.status(400).json({ message: "Passwords do not match" });
+        }
+        if (!isValidPassword(password)) {
+            return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
         }
 
         const existingUser = await User.findOne({ email });
@@ -69,12 +60,10 @@ app.post("/signup", async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({ email, name, dob, userRole, passwordHash: hashedPassword });
-
         await newUser.save();
-        res.status(201).json({ message: "User registered successfully" });
 
+        res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
@@ -83,19 +72,13 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "User not found" });
-        }
 
-        const isMatch = await bcrypt.compare(password, user.passwordHash);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Incorrect password" });
+        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+            return res.status(400).json({ message: "Invalid email or password" });
         }
 
         res.status(200).json({ message: "Login successful" });
-
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
@@ -105,37 +88,26 @@ app.post("/login", async (req, res) => {
 app.post("/forgot-password", async (req, res) => {
     try {
         const { email } = req.body;
+        if (!email) return res.status(400).json({ message: "Email is required." });
+        
         const user = await User.findOne({ email });
+        if (!user) return res.status(404).json({ message: "User not found." });
 
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        // Generate Reset Token (expires in 1 hour)
         const resetToken = crypto.randomBytes(20).toString("hex");
         user.resetToken = resetToken;
-        user.resetTokenExpiry = Date.now() + 3600000; 
-
+        user.resetTokenExpiry = Date.now() + 3600000;
         await user.save();
 
-        // Send Email with Reset Link
-        const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `LabMaster Support <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: "Password Reset Request",
-            text: `Click this link to reset your password: ${resetLink}`
+            subject: "Reset Your Password - LabMaster",
+            html: `<p>Click <a href='${resetLink}'>here</a> to reset your password. This link expires in 1 hour.</p>`
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error("❌ Email error:", error);
-                return res.status(500).json({ message: "Failed to send email", error: error.message });
-            }
-            console.log("✅ Email sent:", info.response);
-            res.json({ message: "Password reset email sent" });
-        });      
-
+        await transporter.sendMail(mailOptions);
+        res.json({ message: "Check your email for the reset link!" });
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
@@ -145,20 +117,19 @@ app.post("/forgot-password", async (req, res) => {
 app.post("/reset-password", async (req, res) => {
     try {
         const { token, newPassword } = req.body;
-        const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
-
-        if (!user) {
-            return res.status(400).json({ message: "Invalid or expired token" });
+        if (!isValidPassword(newPassword)) {
+            return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
         }
+        
+        const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
+        if (!user) return res.status(400).json({ message: "Invalid or expired token" });
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.passwordHash = hashedPassword;
+        user.passwordHash = await bcrypt.hash(newPassword, 10);
         user.resetToken = null;
         user.resetTokenExpiry = null;
-
         await user.save();
-        res.json({ message: "Password has been reset successfully" });
 
+        res.json({ message: "Password has been reset successfully" });
     } catch (error) {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
@@ -167,7 +138,7 @@ app.post("/reset-password", async (req, res) => {
 // Middleware to catch invalid JSON
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError) {
-        return res.status(400).json({ message: "Invalid JSON" });
+        return res.status(400).json({ message: "Invalid JSON format" });
     }
     next();
 });
