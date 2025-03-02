@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: a1f89c8aa66e8f847b34d96c33a3cf47
+guid: 34ff24bd63647da46ab9248425891f58
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7963186115875780795
-    second: weight2_0
+      213: -1091568447662303193
+    second: petri dish02_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: weight2_0
+      name: petri dish02_0
       rect:
         serializedVersion: 2
-        x: 43
-        y: 52
-        width: 647
-        height: 290
+        x: 4
+        y: 2
+        width: 1235
+        height: 447
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bb83915e49be28e60800000000000000
-      internalID: 7963186115875780795
+      spriteID: 728501db748f9d0f0800000000000000
+      internalID: -1091568447662303193
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      weight2_0: 7963186115875780795
+      petri dish02_0: -1091568447662303193
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

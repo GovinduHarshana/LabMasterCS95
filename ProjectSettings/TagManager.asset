@@ -4,7 +4,16 @@
 TagManager:
   serializedVersion: 3
   tags:
-
+  - Stick
+  - StickTip
+  - Chemical1
+  - Chemical2
+  - Chemical3
+  - Chemical4
+  - Chemical5
+  - Chemical6
+  - Chemical7
+  - Chemical8
   layers:
   - Default
   - TransparentFX
@@ -43,7 +52,10 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: mid
- Test_Main
+    uniqueID: 1406168249
+    locked: 0
+  - name: foreground
+    uniqueID: 548029185
     locked: 0
   m_RenderingLayers:
   - Default
