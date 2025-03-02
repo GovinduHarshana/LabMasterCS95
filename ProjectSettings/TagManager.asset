@@ -1,19 +1,7 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
-TagManager:
-  serializedVersion: 3
-  tags:
-  - Stick
-  - StickTip
-  - Chemical01
-  - Chemical02
-  - Chemical03
-  - Chemical04
-  - Chemical05
-  - Chemical06
-  - Chemical07
-  - Chemical08
+
   layers:
   - Default
   - TransparentFX
