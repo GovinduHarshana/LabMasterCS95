@@ -2,17 +2,15 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
-using UnityEngine.UI;
 using System.Text;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 
-public class SigninLogin : MonoBehaviour
+public class SiigninLogin : MonoBehaviour
 {
     public TMP_InputField emailField, nameField, dobField, passwordField, rePasswordField;
     public TMP_Dropdown userRoleDropdown;
     public TMP_Text errorMessageText;
-    public Button loginButton;
     public string serverUrl = "http://localhost:5000";
 
     // Method for signup
@@ -92,7 +90,7 @@ public class SigninLogin : MonoBehaviour
                 if (responseText.Contains("User registered successfully"))
                 {
                     Debug.Log("Signup Successful!");
-                    SceneManager.LoadScene("LoginPage");
+                    SceneManager.LoadScene("LoginPageNew");
                 }
                 else
                 {
@@ -170,7 +168,7 @@ public class SigninLogin : MonoBehaviour
                 if (responseText.Contains("Login successful"))
                 {
                     Debug.Log("Login Successful!");
-                    SceneManager.LoadScene("HomePage");
+                    SceneManager.LoadScene("HomePageNew");
                 }
                 else
                 {

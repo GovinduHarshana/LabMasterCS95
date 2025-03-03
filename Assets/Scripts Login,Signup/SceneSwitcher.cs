@@ -16,9 +16,9 @@ public class SceneSwitcher : MonoBehaviour
     }
 
     // Function to load the HomePage 
-    public void LoadHomePage()
+    public void LoadHomePageNew()
     {
-        SceneManager.LoadScene("HomePage");
+        SceneManager.LoadScene("HomePageNew");
     }
 
     // Function to load the ForgetPasswordPage 

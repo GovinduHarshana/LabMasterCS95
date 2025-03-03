@@ -105,14 +105,14 @@ app.post("/forgot-password", async (req, res) => {
     try {
         const { email } = req.body;
         if (!email) return res.status(400).json({ message: "Email is required." });
-
-        const user = await usersCollection.findOne({ email });
+        
+        const user = await User.findOne({ email });  // Using the User model here
         if (!user) return res.status(404).json({ message: "User not found." });
 
         const resetToken = crypto.randomBytes(20).toString("hex");
-        const resetTokenExpiry = Date.now() + 3600000; // 1 hour expiry
-
-        await usersCollection.updateOne({ email }, { $set: { resetToken, resetTokenExpiry } });
+        user.resetToken = resetToken;
+        user.resetTokenExpiry = Date.now() + 3600000;
+        await user.save();
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
         const mailOptions = {
@@ -137,7 +137,8 @@ app.post("/reset-password", async (req, res) => {
             return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
         }
 
-        const user = await usersCollection.findOne({
+        // Using the correct 'User' model here
+        const user = await User.findOne({
             resetToken: token,
             resetTokenExpiry: { $gt: Date.now() } // Check token is not expired
         });
@@ -145,7 +146,7 @@ app.post("/reset-password", async (req, res) => {
         if (!user) return res.status(400).json({ message: "Invalid or expired token" });
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await usersCollection.updateOne(
+        await User.updateOne(
             { resetToken: token },
             { $set: { passwordHash: hashedPassword, resetToken: null, resetTokenExpiry: null } }
         );

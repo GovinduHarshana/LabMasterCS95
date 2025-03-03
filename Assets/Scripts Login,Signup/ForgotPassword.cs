@@ -1,11 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
 
-public class ForgotPasswordManager : MonoBehaviour
+public class ForgotPassword : MonoBehaviour
 {
     public TMP_InputField emailInput;   // Email input field
     public TMP_Text errorMessageText;   // Text to show errors
