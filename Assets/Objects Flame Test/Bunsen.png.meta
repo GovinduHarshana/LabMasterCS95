@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9612658eb5f3de744a536b8775d9b81b
+guid: 9c2bfe91b245c9046960c6118a8a1a9d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8393583976732197763
-    second: Home Button3_0
+      213: -659886330781462948
+    second: Bunsen_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Home Button3_0
+      name: Bunsen_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 199
-        height: 76
+        width: 1194
+        height: 1241
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 383888dd7200c7470800000000000000
-      internalID: 8393583976732197763
+      spriteID: c5e82add0ec97d6f0800000000000000
+      internalID: -659886330781462948
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Home Button3_0: 8393583976732197763
+      Bunsen_0: -659886330781462948
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
