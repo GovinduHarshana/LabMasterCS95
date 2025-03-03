@@ -5,7 +5,6 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const { MongoClient } = require("mongodb");
 
 const app = express();
 app.use(express.json());
@@ -15,19 +14,19 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+if (!MONGO_URI) {
+    console.error("MongoDB URI is missing in .env file");
     process.exit(1);
-  });
+}
 
-const db = mongoose.connection;
-const quizAnswersCollection = db.collection("quizAnswers");
-const usersCollection = db.collection("users");
-const saveNoteCollection = db.collection("saveNote");
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => {
+        console.error("MongoDB connection error:", err);
+        process.exit(1);
+    });
 
-// User Schema
+// Define User Schema Properly
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -39,7 +38,7 @@ const UserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -106,14 +105,14 @@ app.post("/forgot-password", async (req, res) => {
     try {
         const { email } = req.body;
         if (!email) return res.status(400).json({ message: "Email is required." });
-        
-        const user = await User.findOne({ email });
+
+        const user = await usersCollection.findOne({ email });
         if (!user) return res.status(404).json({ message: "User not found." });
 
         const resetToken = crypto.randomBytes(20).toString("hex");
-        user.resetToken = resetToken;
-        user.resetTokenExpiry = Date.now() + 3600000;
-        await user.save();
+        const resetTokenExpiry = Date.now() + 3600000; // 1 hour expiry
+
+        await usersCollection.updateOne({ email }, { $set: { resetToken, resetTokenExpiry } });
 
         const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
         const mailOptions = {
@@ -137,14 +136,19 @@ app.post("/reset-password", async (req, res) => {
         if (!isValidPassword(newPassword)) {
             return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
         }
-        
-        const user = await User.findOne({ resetToken: token, resetTokenExpiry: { $gt: Date.now() } });
+
+        const user = await usersCollection.findOne({
+            resetToken: token,
+            resetTokenExpiry: { $gt: Date.now() } // Check token is not expired
+        });
+
         if (!user) return res.status(400).json({ message: "Invalid or expired token" });
 
-        user.passwordHash = await bcrypt.hash(newPassword, 10);
-        user.resetToken = null;
-        user.resetTokenExpiry = null;
-        await user.save();
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await usersCollection.updateOne(
+            { resetToken: token },
+            { $set: { passwordHash: hashedPassword, resetToken: null, resetTokenExpiry: null } }
+        );
 
         res.json({ message: "Password has been reset successfully" });
     } catch (error) {
@@ -152,12 +156,9 @@ app.post("/reset-password", async (req, res) => {
     }
 });
 
-//quiz answers save API
+// Quiz Answers Save API
 app.post("/save-quiz", async (req, res) => {
     try {
-        const db = await connectDB();
-        const quizCollection = db.collection("quizAnswers");
-
         const quizData = {
             studentId: req.body.studentId, // Unique student ID
             quizSection: req.body.quizSection, // Section 1 or 2
@@ -165,14 +166,14 @@ app.post("/save-quiz", async (req, res) => {
             timestamp: new Date()
         };
 
-        const result = await quizCollection.insertOne(quizData);
+        const result = await quizAnswersCollection.insertOne(quizData);
         res.status(201).json({ message: "Quiz answers saved!", result });
     } catch (error) {
         res.status(500).json({ message: "Error saving data", error });
     }
 });
 
-// Email validation function
+// Email Validation Function
 const isValidEmail = (email) => {
     return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 };
@@ -182,7 +183,7 @@ const isValidPassword = (password) => {
     return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 };
 
-// Middleware to catch invalid JSON
+// Middleware to Catch Invalid JSON
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError) {
         return res.status(400).json({ message: "Invalid JSON format" });

@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement; // Required to switch scenes
 public class SceneSwitcher : MonoBehaviour
 {
     // Function to load the Login page
-    public void LoadLoginPage()
+    public void LoadLoginPageNew()
     {
-        SceneManager.LoadScene("LoginPage");
+        SceneManager.LoadScene("LoginPageNew");
     }
 
     // Function to load the Signup page
@@ -18,7 +18,7 @@ public class SceneSwitcher : MonoBehaviour
     // Function to load the HomePage 
     public void LoadHomePage()
     {
-        SceneManager.LoadScene("HomePage"); 
+        SceneManager.LoadScene("HomePage");
     }
 
     // Function to load the ForgetPasswordPage 

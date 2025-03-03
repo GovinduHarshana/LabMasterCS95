@@ -1,16 +1,18 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
+using UnityEngine.UI;
 using System.Text;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
 
-public class MongoDBManager : MonoBehaviour
+public class SigninLogin : MonoBehaviour
 {
     public TMP_InputField emailField, nameField, dobField, passwordField, rePasswordField;
     public TMP_Dropdown userRoleDropdown;
     public TMP_Text errorMessageText;
+    public Button loginButton;
     public string serverUrl = "http://localhost:5000";
 
     // Method for signup
