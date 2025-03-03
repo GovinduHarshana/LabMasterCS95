@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4fe51c668021bbb499f32e262a6f5c32
+guid: e14f728a3fa53074a9c675b03d230a87
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2403985922544036682
-    second: Stick02_0
+      213: -4692404794738020801
+    second: RubberHammer1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stick02_0
+      name: RubberHammer1_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 0
-        width: 522
-        height: 1636
+        x: 49
+        y: 49
+        width: 802
+        height: 607
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a4be64ea57cac5120800000000000000
-      internalID: 2403985922544036682
+      spriteID: f3eec4b53ba31eeb0800000000000000
+      internalID: -4692404794738020801
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stick02_0: 2403985922544036682
+      RubberHammer1_0: -4692404794738020801
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
