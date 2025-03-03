@@ -5,7 +5,7 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const User = require("./models/User");
+const { MongoClient } = require("mongodb");
 
 const app = express();
 app.use(express.json());
@@ -15,12 +15,31 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
     process.exit(1);
   });
+
+const db = mongoose.connection;
+const quizAnswersCollection = db.collection("quizAnswers");
+const usersCollection = db.collection("users");
+const saveNoteCollection = db.collection("saveNote");
+
+// User Schema
+const UserSchema = new mongoose.Schema({
+    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    dob: { type: String, required: true },
+    userRole: { type: String, required: true, enum: ["Student", "Teacher", "Institute", "Other"] },
+    passwordHash: { type: String, required: true },
+    resetToken: { type: String, default: null },
+    resetTokenExpiry: { type: Date, default: null },
+    createdAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model("User", UserSchema);
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -33,11 +52,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Password Validation Function
-const isValidPassword = (password) => {
-    return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-};
-
 // Signup API
 app.post("/signup", async (req, res) => {
     try {
@@ -45,6 +59,9 @@ app.post("/signup", async (req, res) => {
 
         if (!email || !name || !dob || !userRole || !password || !rePassword) {
             return res.status(400).json({ message: "All fields are required" });
+        }
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ message: "Invalid email format" });
         }
         if (password !== rePassword) {
             return res.status(400).json({ message: "Passwords do not match" });
@@ -134,6 +151,36 @@ app.post("/reset-password", async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 });
+
+//quiz answers save API
+app.post("/save-quiz", async (req, res) => {
+    try {
+        const db = await connectDB();
+        const quizCollection = db.collection("quizAnswers");
+
+        const quizData = {
+            studentId: req.body.studentId, // Unique student ID
+            quizSection: req.body.quizSection, // Section 1 or 2
+            answers: req.body.answers, // Array of answers
+            timestamp: new Date()
+        };
+
+        const result = await quizCollection.insertOne(quizData);
+        res.status(201).json({ message: "Quiz answers saved!", result });
+    } catch (error) {
+        res.status(500).json({ message: "Error saving data", error });
+    }
+});
+
+// Email validation function
+const isValidEmail = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+};
+
+// Password Validation Function
+const isValidPassword = (password) => {
+    return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+};
 
 // Middleware to catch invalid JSON
 app.use((err, req, res, next) => {
