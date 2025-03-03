@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e62eff2b5670d2d4fa96458ad949f4ba
+guid: e3fca646916309c41a4aa3db7cd6305c
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3002844851311607880
-    second: done 1_0
+      213: -2552674905631770359
+    second: BUBING_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: done 1_0
+      name: BUBING_2_0
       rect:
         serializedVersion: 2
-        x: 61
-        y: 61
-        width: 503
-        height: 503
+        x: 0
+        y: 0
+        width: 320
+        height: 200
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8400a068b7f3ca920800000000000000
-      internalID: 3002844851311607880
+      spriteID: 909b3cea2b3139cd0800000000000000
+      internalID: -2552674905631770359
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      done 1_0: 3002844851311607880
+      BUBING_2_0: -2552674905631770359
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e62eff2b5670d2d4fa96458ad949f4ba
+guid: 5483628fc9b261f41a3ba9a2c3425fb6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3002844851311607880
-    second: done 1_0
+      213: -1147334603482735501
+    second: WeightHanger3_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: done 1_0
+      name: WeightHanger3_0
       rect:
         serializedVersion: 2
-        x: 61
-        y: 61
-        width: 503
-        height: 503
+        x: 35
+        y: 27
+        width: 429
+        height: 1036
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8400a068b7f3ca920800000000000000
-      internalID: 3002844851311607880
+      spriteID: 37cd5e8c149d310f0800000000000000
+      internalID: -1147334603482735501
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      done 1_0: 3002844851311607880
+      WeightHanger3_0: -1147334603482735501
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
