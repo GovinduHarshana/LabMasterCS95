@@ -38,7 +38,14 @@ const UserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+const noteSchema = new mongoose.Schema({
+    userId: String, 
+    content: String
+});
+
 const User = mongoose.model("User", UserSchema);
+
+const Note = mongoose.model('Note', noteSchema);
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -157,22 +164,38 @@ app.post("/reset-password", async (req, res) => {
     }
 });
 
-// Quiz Answers Save API
-app.post("/save-quiz", async (req, res) => {
+// Save Note API
+app.post("/saveNote", async (req, res) => {
     try {
-        const quizData = {
-            studentId: req.body.studentId, // Unique student ID
-            quizSection: req.body.quizSection, // Section 1 or 2
-            answers: req.body.answers, // Array of answers
-            timestamp: new Date()
-        };
+        const { userId, content } = req.body;
+        if (!userId || !content) {
+            return res.status(400).json({ success: false, message: "Missing required fields" });
+        }
 
-        const result = await quizAnswersCollection.insertOne(quizData);
-        res.status(201).json({ message: "Quiz answers saved!", result });
+        const newNote = new Note({ userId, content });
+        await newNote.save();
+        res.json({ success: true, message: "Note saved successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error saving data", error });
+        res.status(500).json({ success: false, message: "Error saving note", error: error.message });
     }
 });
+
+// Get Note API
+app.get('/getNote/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const note = await Note.findOne({ userId });
+
+        if (!note) {
+            return res.status(404).json({ success: false, message: "No note found for this user" });
+        }
+
+        res.json({ success: true, note });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error fetching note", error: error.message });
+    }
+});
+
 
 // Email Validation Function
 const isValidEmail = (email) => {
