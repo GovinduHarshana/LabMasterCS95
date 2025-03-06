@@ -215,6 +215,10 @@ app.use((err, req, res, next) => {
     next();
 });
 
+// Import and use routes
+const progressRoutes = require("./routes/progressRoutes");
+app.use("/api/progress", progressRoutes);
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
