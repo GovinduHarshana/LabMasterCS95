@@ -310,7 +310,14 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Congrats_Image_0: 391538798893893628
+      Congrats_Image_1: 3424015180181215848
+      Congrats_Image_2: -8698270844659088188
+      Congrats_Image_3: 1725047227829750243
+      Congrats_Image_4: -8335684598256492345
+      Congrats_Image_5: 2500796264720482898
+      Congrats_Image_6: 1712668605653122702
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
