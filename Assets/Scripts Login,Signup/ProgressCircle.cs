@@ -10,8 +10,8 @@ public class ProgressUpdater : MonoBehaviour
     public Text practicalProgressText;
     public Text quizProgressText;
 
-    private string userId = "USER_ID_HERE"; // Replace with actual user ID
-    private string apiUrl = "http://yourserver.com/api/progress/";
+    private string userId = "USER_ID_HERE"; 
+    public string serverUrl = "https://lab-master-backend.vercel.app"; // Vercel URL
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class ProgressUpdater : MonoBehaviour
 
     IEnumerator FetchUserProgress()
     {
-        using (UnityWebRequest request = UnityWebRequest.Get(apiUrl + userId))
+        using (UnityWebRequest request = UnityWebRequest.Get(serverUrl + userId))
         {
             yield return request.SendWebRequest();
 

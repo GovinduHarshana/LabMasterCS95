@@ -1,211 +1,14 @@
 require("dotenv").config();
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
+const mongoose = require("./config/db"); // Import MongoDB connection
+const path = require("path");
+
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-// MongoDB Connection
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-    console.error("MongoDB URI is missing in .env file");
-    process.exit(1);
-}
-
-mongoose.connect(MONGO_URI)
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => {
-        console.error("MongoDB connection error:", err);
-        process.exit(1);
-    });
-
-// Define User Schema Properly
-const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    dob: { type: String, required: true },
-    userRole: { type: String, required: true, enum: ["Student", "Teacher", "Institute", "Other"] },
-    passwordHash: { type: String, required: true },
-    resetToken: { type: String, default: null },
-    resetTokenExpiry: { type: Date, default: null },
-    createdAt: { type: Date, default: Date.now }
-});
-
-const noteSchema = new mongoose.Schema({
-    userId: String, 
-    content: String
-});
-
-const User = mongoose.model("User", UserSchema);
-
-const Note = mongoose.model('Note', noteSchema);
-
-// Nodemailer Transporter
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    secure: true,
-    port: 465,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
-// Signup API
-app.post("/signup", async (req, res) => {
-    try {
-        const { email, name, dob, userRole, password, rePassword } = req.body;
-
-        if (!email || !name || !dob || !userRole || !password || !rePassword) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-        if (!isValidEmail(email)) {
-            return res.status(400).json({ message: "Invalid email format" });
-        }
-        if (password !== rePassword) {
-            return res.status(400).json({ message: "Passwords do not match" });
-        }
-        if (!isValidPassword(password)) {
-            return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
-        }
-
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ email, name, dob, userRole, passwordHash: hashedPassword });
-        await newUser.save();
-
-        res.status(201).json({ message: "User registered successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-});
-
-// Login API
-app.post("/login", async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-
-        if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-            return res.status(400).json({ message: "Invalid email or password" });
-        }
-
-        res.status(200).json({ message: "Login successful" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-});
-
-// Forgot Password API
-app.post("/forgot-password", async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) return res.status(400).json({ message: "Email is required." });
-        
-        const user = await User.findOne({ email });  // Using the User model here
-        if (!user) return res.status(404).json({ message: "User not found." });
-
-        const resetToken = crypto.randomBytes(20).toString("hex");
-        user.resetToken = resetToken;
-        user.resetTokenExpiry = Date.now() + 3600000;
-        await user.save();
-
-        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-        const mailOptions = {
-            from: `LabMaster Support <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject: "Reset Your Password - LabMaster",
-            html: `<p>Click <a href='${resetLink}'>here</a> to reset your password. This link expires in 1 hour.</p>`
-        };
-
-        await transporter.sendMail(mailOptions);
-        res.json({ message: "Check your email for the reset link!" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-});
-
-// Reset Password API
-app.post("/reset-password", async (req, res) => {
-    try {
-        const { token, newPassword } = req.body;
-        if (!isValidPassword(newPassword)) {
-            return res.status(400).json({ message: "Weak password: Must be 8+ characters with 1 uppercase, 1 number, and 1 special character." });
-        }
-
-        // Using the correct 'User' model here
-        const user = await User.findOne({
-            resetToken: token,
-            resetTokenExpiry: { $gt: Date.now() } // Check token is not expired
-        });
-
-        if (!user) return res.status(400).json({ message: "Invalid or expired token" });
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        await User.updateOne(
-            { resetToken: token },
-            { $set: { passwordHash: hashedPassword, resetToken: null, resetTokenExpiry: null } }
-        );
-
-        res.json({ message: "Password has been reset successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error", error: error.message });
-    }
-});
-
-// Save Note API
-app.post("/saveNote", async (req, res) => {
-    try {
-        const { userId, content } = req.body;
-        if (!userId || !content) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
-        }
-
-        const newNote = new Note({ userId, content });
-        await newNote.save();
-        res.json({ success: true, message: "Note saved successfully" });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Error saving note", error: error.message });
-    }
-});
-
-// Get Note API
-app.get('/getNote/:userId', async (req, res) => {
-    try {
-        const userId = req.params.userId;
-        const note = await Note.findOne({ userId });
-
-        if (!note) {
-            return res.status(404).json({ success: false, message: "No note found for this user" });
-        }
-
-        res.json({ success: true, note });
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Error fetching note", error: error.message });
-    }
-});
-
-
-// Email Validation Function
-const isValidEmail = (email) => {
-    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
-};
-
-// Password Validation Function
-const isValidPassword = (password) => {
-    return /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
-};
 
 // Middleware to Catch Invalid JSON
 app.use((err, req, res, next) => {
@@ -216,10 +19,34 @@ app.use((err, req, res, next) => {
 });
 
 // Import and use routes
-const progressRoutes = require("./routes/progressRoutes");
-app.use("/api/progress", progressRoutes);
+// Auth routes
+const loginRoute = require("./api/auth/login");
+app.use("/api/auth", loginRoute);
 
-// Start Server
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+const signupRoute = require("./api/auth/signup");
+app.use("/api/auth", signupRoute);
+
+const forgotPasswordRoute = require("./api/auth/forgot-password");
+app.use("/api/auth", forgotPasswordRoute);
+
+const resetPasswordRoute = require("./api/auth/reset-password");
+app.use("/api/auth", resetPasswordRoute);
+
+// Note routes
+const createNoteRoute = require("./api/note/createNote");
+app.use("/api/note", createNoteRoute);
+
+const retrieveNoteRoute = require("./api/note/retrieveNote");
+app.use("/api/note", retrieveNoteRoute);
+
+// Progress routes
+const getProgressRoute = require("./api/progress/getProgress");
+app.use("/api/progress", getProgressRoute);
+
+const updateProgressRoute = require("./api/progress/updateProgress");
+app.use("/api/progress", updateProgressRoute);
+
+
+
+// Export the app for Vercel
+module.exports = app;

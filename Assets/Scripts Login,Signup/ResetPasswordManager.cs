@@ -13,9 +13,9 @@ public class ResetPassword : MonoBehaviour
     public TextMeshProUGUI errorMessage;
     public GameObject successPopup;
     public TextMeshProUGUI successMessage;
-    public Button resetPasswordButton; 
+    public Button resetPasswordButton;
 
-    private string apiUrl = "http://localhost:5000/reset-password";
+    public string serverUrl = "https://lab-master-backend.vercel.app/api/auth/reset-password"; // Vercel URL
     private string resetToken = "";
 
     void Start()
@@ -83,7 +83,7 @@ public class ResetPassword : MonoBehaviour
         string jsonData = "{\"token\":\"" + token + "\", \"newPassword\":\"" + newPassword + "\"}";
         byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonData);
 
-        UnityWebRequest request = new UnityWebRequest(apiUrl, "POST");
+        UnityWebRequest request = new UnityWebRequest(serverUrl, "POST");
         request.uploadHandler = new UploadHandlerRaw(jsonBytes);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
