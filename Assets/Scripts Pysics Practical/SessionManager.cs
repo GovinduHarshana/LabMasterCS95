@@ -39,8 +39,12 @@ public class SessionManager : MonoBehaviour
     // Method to handle the "Yes" button in the popup
     public void OnYesButtonClicked()
     {
+        // Save the session time
+        PlayerPrefs.SetFloat("SessionTime", sessionTime);
+        PlayerPrefs.Save();
+
         // Load the End Screen scene
-        SceneManager.LoadScene("EndScreen");
+        SceneManager.LoadScene("EndOfThePractical");
     }
 
     // Method to handle the "No" button in the popup
