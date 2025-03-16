@@ -7,12 +7,11 @@ using UnityEngine.Networking;
 
 public class ForgotPassword : MonoBehaviour
 {
-    public TMP_InputField emailInput;   // Email input field
-    public TMP_Text errorMessageText;   // Text to show errors
-    public TMP_Text successMessageText; // Text to show success message
-    public Button sendButton;           // Send button
-
-    public string serverUrl = "https://lab-master-backend.vercel.app/api/auth/forgot-password"; // Vercel URL
+    public TMP_InputField emailInput;
+    public TMP_Text errorMessageText;
+    public TMP_Text successMessageText;
+    public Button sendButton;
+    public string forgotPasswordServerUrl = "https://lab-master-backend.vercel.app/api/auth/forgot-password";
 
     void Start()
     {
@@ -50,28 +49,25 @@ public class ForgotPassword : MonoBehaviour
 
     IEnumerator SendForgotPasswordRequest(string email)
     {
-        // Create JSON payload
-        string jsonData = "{\"email\": \"" + email + "\"}";
+        string jsonData = JsonUtility.ToJson(new { email });
         byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonData);
 
-        // Create request
-        UnityWebRequest request = new UnityWebRequest(serverUrl, "POST");
+        UnityWebRequest request = new UnityWebRequest(forgotPasswordServerUrl, "POST");
         request.uploadHandler = new UploadHandlerRaw(jsonBytes);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
 
-        // Send request
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            successMessageText.text = "Check your email for the reset link!";
+            successMessageText.text = "Check your email for the reset token!";
             errorMessageText.text = "";
         }
         else
         {
             successMessageText.text = "";
-            errorMessageText.text = "User not found.";
+            errorMessageText.text = "User not found or server error.";
         }
     }
 }
