@@ -26,4 +26,34 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene("ForgetPassword");
     }
+
+    // Function to load the WelcomePage 
+    public void LoadWelcomePage()
+    {
+        SceneManager.LoadScene("WelcomePage");
+    }
+
+    // Function to load the PhysicsQuizListPage 
+    public void LoadPhysicsQuizList()
+    {
+        SceneManager.LoadScene("PhysicsQuizList");
+    }
+
+    // Function to load the ChemistryQuizListPage 
+    public void LoadChemistryQuizList()
+    {
+        SceneManager.LoadScene("ChemistryQuizList");
+    }
+
+    // Function to load the PhysicsListPage 
+    public void LoadPhysicsList()
+    {
+        SceneManager.LoadScene("PhysicsList");
+    }
+
+    // Function to load the ChemistryListPage 
+    public void LoadChemistryList()
+    {
+        SceneManager.LoadScene("ChemistryList");
+    }
 }
