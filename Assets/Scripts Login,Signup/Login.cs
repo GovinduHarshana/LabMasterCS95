@@ -10,7 +10,7 @@ public class Login : MonoBehaviour
 {
     public TMP_InputField emailField, passwordField;
     public TMP_Text errorMessageText;
-    public string serverUrl = "https://lab-master-backend.vercel.app/api/auth/login"; // Vercel URL
+    public string loginServerUrl = "https://lab-master-backend.vercel.app/api/auth/login"; // Vercel URL
 
     public void LoginUser()
     {
@@ -34,7 +34,7 @@ public class Login : MonoBehaviour
             password = password
         });
 
-        using (UnityWebRequest www = new UnityWebRequest(serverUrl, "POST"))
+        using (UnityWebRequest www = new UnityWebRequest(loginServerUrl, "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             www.uploadHandler = new UploadHandlerRaw(bodyRaw);

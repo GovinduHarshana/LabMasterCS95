@@ -12,7 +12,7 @@ public class Signup : MonoBehaviour
     public TMP_InputField emailField, nameField, dobField, passwordField, rePasswordField;
     public TMP_Dropdown userRoleDropdown;
     public TMP_Text errorMessageText;
-    public string serverUrl = "https://lab-master-backend.vercel.app/api/auth/signup"; // Vercel URL
+    public string signupServerUrl = "https://lab-master-backend.vercel.app/api/auth/signup"; // Vercel URL
 
     public void SignupUser()
     {
@@ -67,7 +67,7 @@ public class Signup : MonoBehaviour
             rePassword = rePassword
         });
 
-        using (UnityWebRequest www = new UnityWebRequest(serverUrl, "POST"))
+        using (UnityWebRequest www = new UnityWebRequest(signupServerUrl, "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
             www.uploadHandler = new UploadHandlerRaw(bodyRaw);
