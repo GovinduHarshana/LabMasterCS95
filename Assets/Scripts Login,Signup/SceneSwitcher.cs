@@ -26,4 +26,10 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene("ForgetPassword");
     }
+
+    // Function to load the WelcomePage 
+    public void LoadWelcomePage()
+    {
+        SceneManager.LoadScene("WelcomePage");
+    }
 }
