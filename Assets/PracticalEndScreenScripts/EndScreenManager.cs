@@ -25,14 +25,27 @@ public class EndScreenManager : MonoBehaviour
     // Store the last quiz scene name
     private string lastQuizSceneName;
 
-    // Method to redo the quiz
-    public void OnRedoButtonClicked()
+    // Method to go to the Quiz section
+    public void OnQuizButtonClicked()
     {
         SceneManager.LoadScene(lastQuizSceneName);
     }
 
-    // Method to go to the corresponding practical list
-    public void OnTryPracticalListButtonClicked()
+
+    // Method to go to the Quiz section
+    public void OnPracticalButtonClicked()
+    {
+        SceneManager.LoadScene(lastPracticalType);
+    }
+
+    // Method to go to the Home scene
+    public void OnHomeButtonClicked()
+    {
+        SceneManager.LoadScene("HomePageNew");
+    }
+
+    // Method to go to the Practical List scene
+    public void OnPracticalListButtonClicked()
     {
         if (lastPracticalType == "Physics")
         {
@@ -50,42 +63,17 @@ public class EndScreenManager : MonoBehaviour
         }
     }
 
-    // Method to go to the Home scene
-    public void OnHomeButtonClicked()
-    {
-        SceneManager.LoadScene("HomePageNew");
-    }
-
-    // Method to go to the Practical List scene
-    public void OnQuizListButtonClicked()
-    {
-        if (lastPracticalType == "Physics")
-        {
-            SceneManager.LoadScene("PhysicsQuizList");
-        }
-        else if (lastPracticalType == "Chemistry")
-        {
-            SceneManager.LoadScene("ChemistryQuizList"); 
-        }
-        else
-        {
-            // Handle unknown practical type (e.g., default to Chemistry)
-            SceneManager.LoadScene("ChemistryQuizList");
-            Debug.LogWarning("Unknown practical type. Defaulting to Chemistry Quiz List.");
-        }
-    }
-
     // Method to redo the practical
-    public void OnTryPracticalButtonClicked()
+    public void OnRedoButtonClicked()
     {
         // Load the last practical scene based on the stored type
         if (lastPracticalType == "Physics")
         {
-            SceneManager.LoadScene("PhysicsPractical");  
+            SceneManager.LoadScene("PhysicsPractical"); 
         }
         else if (lastPracticalType == "Chemistry")
         {
-            SceneManager.LoadScene("FlameTestNew");  
+            SceneManager.LoadScene("FlameTestNew"); 
         }
         else
         {
