@@ -41,11 +41,6 @@ public class SessionManager : MonoBehaviour
     {
         // Save the session time
         PlayerPrefs.SetFloat("SessionTime", sessionTime);
-
-        // Update progress (increase by 10%)
-        float currentProgress = PlayerPrefs.GetFloat("Progress", 0f);
-        currentProgress += 10f; // Increase progress by 10%
-        PlayerPrefs.SetFloat("Progress", currentProgress);
         PlayerPrefs.Save();
 
         // Load the End Screen scene
