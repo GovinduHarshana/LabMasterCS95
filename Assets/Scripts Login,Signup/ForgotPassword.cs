@@ -12,7 +12,7 @@ public class ForgotPassword : MonoBehaviour
     public TMP_Text successMessageText; // Text to show success message
     public Button sendButton;           // Send button
 
-    public string serverUrl = "https://lab-master-backend.vercel.app/api/auth/forgot-password"; // Vercel URL
+    public string forgotPasswordServerUrl = "https://lab-master-backend.vercel.app/api/auth/forgot-password"; // Vercel URL
 
     void Start()
     {
@@ -55,7 +55,7 @@ public class ForgotPassword : MonoBehaviour
         byte[] jsonBytes = Encoding.UTF8.GetBytes(jsonData);
 
         // Create request
-        UnityWebRequest request = new UnityWebRequest(serverUrl, "POST");
+        UnityWebRequest request = new UnityWebRequest(forgotPasswordServerUrl, "POST");
         request.uploadHandler = new UploadHandlerRaw(jsonBytes);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
