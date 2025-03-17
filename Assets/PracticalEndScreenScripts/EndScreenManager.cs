@@ -13,12 +13,29 @@ public class EndScreenManager : MonoBehaviour
         int minutes = (int)(sessionTime / 60);
         int seconds = (int)(sessionTime % 60);
         sessionTimeText.text = string.Format("Session Time: {0:00}:{1:00}", minutes, seconds);
+
+        // Load the last practical type (Physics or Chemistry)
+        lastPracticalType = PlayerPrefs.GetString("LastPracticalType", "Unknown");
+        // Load the last quiz scene name
+        lastQuizSceneName = PlayerPrefs.GetString("LastQuizScene", "QuizFlameTest"); // Default to FlameTest if not set
     }
+
+    // Store the last practical type (Physics or Chemistry)
+    private string lastPracticalType;
+    // Store the last quiz scene name
+    private string lastQuizSceneName;
 
     // Method to go to the Quiz section
     public void OnQuizButtonClicked()
     {
-        SceneManager.LoadScene("QuizFlameTest");
+        SceneManager.LoadScene(lastQuizSceneName);
+    }
+
+
+    // Method to go to the Quiz section
+    public void OnPracticalButtonClicked()
+    {
+        SceneManager.LoadScene(lastPracticalType);
     }
 
     // Method to go to the Home scene
@@ -30,12 +47,39 @@ public class EndScreenManager : MonoBehaviour
     // Method to go to the Practical List scene
     public void OnPracticalListButtonClicked()
     {
-        SceneManager.LoadScene("ChemistryList");
+        if (lastPracticalType == "Physics")
+        {
+            SceneManager.LoadScene("PhysicsList");
+        }
+        else if (lastPracticalType == "Chemistry")
+        {
+            SceneManager.LoadScene("ChemistryList");
+        }
+        else
+        {
+            // Handle unknown practical type (e.g., default to Chemistry)
+            SceneManager.LoadScene("ChemistryList");
+            Debug.LogWarning("Unknown practical type. Defaulting to Chemistry List.");
+        }
     }
 
     // Method to redo the practical
     public void OnRedoButtonClicked()
     {
-        SceneManager.LoadScene("FlameTestNew");
+        // Load the last practical scene based on the stored type
+        if (lastPracticalType == "Physics")
+        {
+            SceneManager.LoadScene("PhysicsPractical"); 
+        }
+        else if (lastPracticalType == "Chemistry")
+        {
+            SceneManager.LoadScene("FlameTestNew"); 
+        }
+        else
+        {
+            // Handle unknown practical type (e.g., default to Chemistry)
+            SceneManager.LoadScene("FlameTestNew");
+            Debug.LogWarning("Unknown practical type. Defaulting to Chemistry Practical.");
+        }
     }
 }

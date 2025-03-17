@@ -56,4 +56,29 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene("ChemistryList");
     }
+
+    // Function to load the FlameTestNewPage 
+    public void LoadFlameTestNew()
+    {
+        SceneManager.LoadScene("FlameTestNew");
+    }
+
+    // Function to load the PhysicsPracticalPage 
+    public void LoadPhysicsPractical()
+    {
+        SceneManager.LoadScene("PhysicsPractical");
+    }
+
+    // Function to load the QuizFlameTestPage 
+    public void LoadQuizFlameTest()
+    {
+        SceneManager.LoadScene("QuizFlameTest");
+    }
+
+    // Function to load the QuizSonometerPage 
+    public void LoadQuizSonometer()
+    {
+        SceneManager.LoadScene("QuizSonometer");
+    }
+
 }
