@@ -160,7 +160,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PlanitunStickMovement1_0: -5513925237423265852
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
