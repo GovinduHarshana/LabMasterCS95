@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro; // Add this namespace for TextMeshPro
-using UnityEngine.UI;
 
 public class StepByStepGuidance : MonoBehaviour
 {
@@ -19,14 +18,10 @@ public class StepByStepGuidance : MonoBehaviour
     // Index to track the current step
     private int currentStepIndex = 0;
 
-    public Button TeacherButton;
-
     void Start()
     {
-        stepByStepPanel.SetActive(false);
+        // Initialize the first step
         UpdateStep();
-
-        TeacherButton.onClick.AddListener(OnTeacherButtonClicked);
     }
 
     // Method to update the step display
@@ -75,12 +70,5 @@ public class StepByStepGuidance : MonoBehaviour
         {
             stepByStepPanel.SetActive(false);
         }
-    }
-
-    public void OnTeacherButtonClicked()
-    {
-        Debug.Log("Teacher button clicked!");
-        gameObject.SetActive(!gameObject.activeSelf); // Toggle the active state of the GameObject the script is on
-        Debug.Log("StepByStepPanel active: " + gameObject.activeSelf);
     }
 }

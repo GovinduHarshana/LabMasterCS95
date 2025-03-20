@@ -33,12 +33,6 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadScene("WelcomePage");
     }
 
-    // Function to load the ProfilePage 
-    public void LoadProfilePage()
-    {
-        SceneManager.LoadScene("ProfilePage");
-    }
-
     // Function to load the PhysicsQuizListPage 
     public void LoadPhysicsQuizList()
     {
