@@ -17,12 +17,23 @@ public class QuizManagerNew : MonoBehaviour
     public Button nextQuestionButton;
     public Slider progressBar;
     public TextMeshProUGUI questionNumberText;
+    public Button BackButton;
 
     private int currentQuestionIndex = 0;
     private int correctAnswers = 0;
 
-    public TextMeshProUGUI timerText; // timer text
-    private float timer = 30f; // 30-second timer
+    public TextMeshProUGUI TimerText; // timer text
+    public GameObject PopupBox;
+    public Button OkButton;
+
+    private bool timerRunning = false;
+    private float timer = 180f; // 3-minute timer
+
+    private Vector3 popupStartPosition;
+
+    public GameObject TimeoutPopup;
+    public Button ContinueButton; 
+    public Button CancelButton;   
 
     void Start()
     {
@@ -31,21 +42,84 @@ public class QuizManagerNew : MonoBehaviour
 
         checkAnswerButton.onClick.AddListener(CheckAnswer);
         nextQuestionButton.onClick.AddListener(NextQuestion);
+        BackButton.onClick.AddListener(PreviousQuestion);
 
-        StartCoroutine(QuizTimer()); // Start the timer
+        OkButton.onClick.AddListener(StartQuizTimer); // Add listener to OK button
+
+        // Disable quiz interaction elements
+        checkAnswerButton.interactable = false;
+        nextQuestionButton.interactable = false;
+        foreach (Toggle toggle in answerToggleGroup.GetComponentsInChildren<Toggle>())
+        {
+            toggle.interactable = false;
+        }
+
+        // Set initial position and start animation
+        popupStartPosition = PopupBox.GetComponent<RectTransform>().anchoredPosition;
+        PopupBox.GetComponent<RectTransform>().anchoredPosition = popupStartPosition + new Vector3(0, 500, 0); // Start off-screen
+
+        StartCoroutine(AnimatePopup());
+
+        ContinueButton.onClick.AddListener(OnContinueButtonClicked); 
+        CancelButton.onClick.AddListener(OnCancelButtonClicked);
+
+    }
+
+    IEnumerator AnimatePopup()
+    {
+        float animationDuration = 1f; 
+        float elapsedTime = 0f;
+        RectTransform popupRect = PopupBox.GetComponent<RectTransform>();
+
+        while (elapsedTime < animationDuration)
+        {
+            popupRect.anchoredPosition = Vector3.Lerp(popupRect.anchoredPosition, popupStartPosition, elapsedTime / animationDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        popupRect.anchoredPosition = popupStartPosition; // Ensure final position is exact
+    }
+
+    void StartQuizTimer()
+    {
+        PopupBox.SetActive(false); // Hide the popup
+        timerRunning = true;
+        StartCoroutine(QuizTimer());
+
+        // Enable quiz interaction elements
+        checkAnswerButton.interactable = true;
+        nextQuestionButton.interactable = true;
+        foreach (Toggle toggle in answerToggleGroup.GetComponentsInChildren<Toggle>())
+        {
+            toggle.interactable = true;
+        }
     }
 
     IEnumerator QuizTimer()
     {
         while (timer > 0)
         {
-            timerText.text = "Timer: " + Mathf.FloorToInt(timer).ToString() + "s";
+            int minutes = Mathf.FloorToInt(timer / 60);
+            int seconds = Mathf.FloorToInt(timer % 60);
+            TimerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             yield return new WaitForSeconds(1f);
             timer--;
         }
 
-        timerText.text = "Time: 0"; // Ensure timer shows 0 when finished
-        CompleteQuiz(); // Quiz finished when timer reaches 0
+        TimerText.text = "Time: 00:00"; // Ensure timer shows 0 when finished
+        if (timerRunning)
+        {
+            TimeoutPopup.SetActive(true);
+            timerRunning = false;
+            //Optional Code to stop interaction with the quiz.
+            checkAnswerButton.interactable = false;
+            nextQuestionButton.interactable = false;
+            foreach (Toggle toggle in answerToggleGroup.GetComponentsInChildren<Toggle>())
+            {
+                toggle.interactable = false;
+            }
+        }
     }
 
     void LoadQuestion(int index)
@@ -65,6 +139,9 @@ public class QuizManagerNew : MonoBehaviour
         explanationText.text = "";
 
         questionNumberText.text = $"Question {index + 1} of {quizSO.quizData.Length}";
+
+        // Disable Back button on the first question
+        BackButton.interactable = (index > 0);
     }
 
     void CheckAnswer()
@@ -112,10 +189,49 @@ public class QuizManagerNew : MonoBehaviour
         }
     }
 
+    void PreviousQuestion()
+    {
+        currentQuestionIndex--;
+        LoadQuestion(currentQuestionIndex);
+        UpdateProgressBar();
+    }
+
     void UpdateProgressBar()
     {
         progressBar.value = (float)(currentQuestionIndex + 1) / quizSO.quizData.Length;
     }
+
+    public void OnContinueButtonClicked()
+    {
+        TimeoutPopup.SetActive(false);
+        RestartQuiz(); // Restart the quiz
+    }
+
+    public void OnCancelButtonClicked()
+    {
+        TimeoutPopup.SetActive(false);
+        //SceneManager.LoadScene("QuizListPanel"); 
+    }
+
+    public void RestartQuiz()
+    {
+        currentQuestionIndex = 0;
+        correctAnswers = 0;
+        timer = 180f; // Reset the timer
+        timerRunning = true;
+        LoadQuestion(currentQuestionIndex);
+        UpdateProgressBar();
+        StartCoroutine(QuizTimer());
+
+        // Enable quiz interaction elements
+        checkAnswerButton.interactable = true;
+        nextQuestionButton.interactable = true;
+        foreach (Toggle toggle in answerToggleGroup.GetComponentsInChildren<Toggle>())
+        {
+            toggle.interactable = true;
+        }
+    }
+
 
     public void CompleteQuiz()
     {
