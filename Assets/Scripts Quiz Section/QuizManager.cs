@@ -115,6 +115,7 @@ public class QuizManagerNew : MonoBehaviour
             //Optional Code to stop interaction with the quiz.
             checkAnswerButton.interactable = false;
             nextQuestionButton.interactable = false;
+            BackButton.interactable = false;
             foreach (Toggle toggle in answerToggleGroup.GetComponentsInChildren<Toggle>())
             {
                 toggle.interactable = false;
