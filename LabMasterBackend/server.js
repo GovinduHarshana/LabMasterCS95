@@ -32,6 +32,9 @@ app.use("/api/auth", forgotPasswordRoute);
 const resetPasswordRoute = require("./api/auth/reset-password");
 app.use("/api/auth", resetPasswordRoute);
 
+const ProfileRoute = require("./api/auth/profile");
+app.use("/api/auth", ProfileRoute);
+
 // Note routes
 const createNoteRoute = require("./api/note/createNote");
 app.use("/api/note", createNoteRoute);
