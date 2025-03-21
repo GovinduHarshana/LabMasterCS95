@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9578c7c457f8949609b9fbe4274a4170
+guid: b8c46bc3b29cab84b81a9d3750bf1e38
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6497244605814915858
-    second: Trnasparent_0
+      213: 2323678125049306087
+    second: DarkStick_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Trnasparent_0
+      name: DarkStick_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 282
-        width: 1366
-        height: 486
+        y: 0
+        width: 294
+        height: 250
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 213cb6c8b89da2a50800000000000000
-      internalID: 6497244605814915858
+      spriteID: 7ebd8ef71fc5f3020800000000000000
+      internalID: 2323678125049306087
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Trnasparent_0: 6497244605814915858
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

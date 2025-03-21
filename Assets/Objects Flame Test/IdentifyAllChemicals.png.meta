@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9578c7c457f8949609b9fbe4274a4170
+guid: 3e6c9e29a8ee4ee4d83285d018246110
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6497244605814915858
-    second: Trnasparent_0
+      213: 8324010819144814755
+    second: IdentifyAllChemicals_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Trnasparent_0
+      name: IdentifyAllChemicals_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 282
-        width: 1366
-        height: 486
+        y: 0
+        width: 215
+        height: 236
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 213cb6c8b89da2a50800000000000000
-      internalID: 6497244605814915858
+      spriteID: 3a092adccb3d48370800000000000000
+      internalID: 8324010819144814755
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Trnasparent_0: 6497244605814915858
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
