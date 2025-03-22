@@ -185,7 +185,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      format_ink_highlighter_0: 7024500883649430572
+      format_ink_highlighter_1: 4286646310230764791
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
