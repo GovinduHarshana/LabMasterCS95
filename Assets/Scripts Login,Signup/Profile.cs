@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; 
 
 public class ProfileManager : MonoBehaviour
 {
@@ -64,11 +65,18 @@ public class ProfileManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("Profile updated successfully!");
+            NavigateToAccountSettings();
         }
         else
         {
             Debug.LogError("Error updating profile: " + request.error);
         }
+    }
+
+    public void NavigateToAccountSettings()
+    {
+        
+        SceneManager.LoadScene("AccountSettingsScene");
     }
 }
 
