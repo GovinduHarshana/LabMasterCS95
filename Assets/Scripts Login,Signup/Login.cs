@@ -9,7 +9,7 @@ public class Login : MonoBehaviour
 {
     public TMP_InputField emailField, passwordField;
     public TMP_Text errorMessageText;
-    public string loginServerUrl = "https://lab-master-backend.vercel.app/api/auth/login"; // Vercel URL
+    private string loginServerUrl = "https://lab-master-backend.vercel.app/api/auth/login";
 
     public void LoginUser()
     {
@@ -27,11 +27,7 @@ public class Login : MonoBehaviour
             yield break;
         }
 
-        string jsonData = JsonUtility.ToJson(new LoginData
-        {
-            email = email,
-            password = password
-        });
+        string jsonData = JsonUtility.ToJson(new LoginData { email = email, password = password });
 
         using (UnityWebRequest www = new UnityWebRequest(loginServerUrl, "POST"))
         {
@@ -47,9 +43,20 @@ public class Login : MonoBehaviour
                 string responseText = www.downloadHandler.text;
                 Debug.Log("Server Response: " + responseText);
 
-                if (responseText.Contains("Login successful"))
+                LoginResponse response = JsonUtility.FromJson<LoginResponse>(responseText);
+
+                if (response.message == "Login successful")
                 {
                     Debug.Log("Login Successful!");
+
+                    // Save user details in PlayerPrefs
+                    PlayerPrefs.SetString("userId", response.userId);
+                    PlayerPrefs.SetString("userName", response.name);
+                    PlayerPrefs.SetString("userRole", response.role);
+                    PlayerPrefs.Save();
+
+                    Debug.Log($"Saved User Data - ID: {response.userId}, Name: {response.name}, Role: {response.role}");
+
                     SceneManager.LoadScene("HomePageNew");
                 }
                 else
@@ -57,22 +64,22 @@ public class Login : MonoBehaviour
                     DisplayError("Unexpected error. Please try again.");
                 }
             }
-            else if (www.responseCode == 400)
+            else if (www.responseCode == 401) // Handle login failure
             {
                 string responseText = www.downloadHandler.text;
-                Debug.Log("Server Response: " + responseText);
+                Debug.LogError("Server Response: " + responseText);
 
-                if (responseText.Contains("User not found"))
+                if (responseText.Contains("Invalid email"))
                 {
-                    DisplayError("Login Failed: User not found.");
+                    DisplayError("User not found. Please check your email.");
                 }
-                else if (responseText.Contains("Incorrect password"))
+                else if (responseText.Contains("Invalid password"))
                 {
-                    DisplayError("Login Failed: Incorrect password.");
+                    DisplayError("Incorrect password. Please try again.");
                 }
                 else
                 {
-                    DisplayError("Login Failed: Unknown error.");
+                    DisplayError("Login failed. Please check your details.");
                 }
             }
             else
@@ -98,4 +105,13 @@ public class LoginData
 {
     public string email;
     public string password;
+}
+
+[System.Serializable]
+public class LoginResponse
+{
+    public string message;
+    public string userId;
+    public string name;  
+    public string role;  
 }

@@ -2,10 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const User = require("../../models/user");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 
 // GET Profile
 router.get("/:id", async (req, res) => {
-    console.log("Incoming GET request for user ID:", req.params.id);  // Debug log
+    console.log("Incoming GET request for user ID:", req.params.id);
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: "Invalid user ID" });
@@ -27,7 +28,7 @@ router.get("/:id", async (req, res) => {
 router.put("/update/:id", async (req, res) => {
     console.log("Incoming PUT request for user ID:", req.params.id, "with data:", req.body);
     try {
-        const { name, dob, mobileNumber, nic, profilePicture } = req.body;
+        const { name, dob, mobileNumber, nic, password } = req.body;
 
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: "Invalid user ID" });
@@ -50,7 +51,12 @@ router.put("/update/:id", async (req, res) => {
         user.dob = dob || user.dob;
         user.mobileNumber = mobileNumber || user.mobileNumber;
         user.nic = nic || user.nic;
-        user.profilePicture = profilePicture || user.profilePicture;
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            user.password = hashedPassword;
+        }
 
         await user.save();
         res.status(200).json({ message: "Profile updated successfully", user });
