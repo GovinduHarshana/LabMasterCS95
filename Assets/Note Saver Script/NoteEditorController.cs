@@ -29,7 +29,7 @@ public class NoteEditorController : MonoBehaviour
     [SerializeField] private Button saveButton;
 
     [Header("New Buttons")]
-    //[SerializeField] private Button highlightButton;
+    [SerializeField] private Button highlightButton;
     [SerializeField] private Button fontColorButton;
 
     [Header("Color Buttons")]
@@ -38,13 +38,6 @@ public class NoteEditorController : MonoBehaviour
     [SerializeField] private Button greenColorButton;
     [SerializeField] private Button blueColorButton;
     [SerializeField] private Button blackColorButton;
-
-    //[Header("Highlight Buttons")]
-    //[SerializeField] private GameObject highlightcolorPanel;
-    //[SerializeField] private Button yellowHighlightButton;
-    //[SerializeField] private Button cyanHighlightButton;
-    //[SerializeField] private Button magentaHighlightButton;
-    //[SerializeField] private Button grayHighlightButton;
 
     [Header("MongoDB Settings")]
     [SerializeField] private string mongoDBAPIUrl = "https://yourapi.com/savenote";
@@ -71,11 +64,7 @@ public class NoteEditorController : MonoBehaviour
         textAreaField.onValueChanged.AddListener(OnTextChanged);
         titleField.onValueChanged.AddListener(OnTitleChanged);
 
-        // Add listeners for new buttons
-        //highlightButton.onClick.AddListener(OnHighlightButtonClick);
-
         colorPanel.SetActive(false);
-        //highlightcolorPanel.SetActive(false);
 
     }
 
@@ -243,88 +232,31 @@ public class NoteEditorController : MonoBehaviour
     // Method to handle red color button click
     public void OnRedColorButtonClick()
     {
-        ApplyColorFormatting("color", "DB1C1C"); // Red
+        ApplyColorFormatting("color", "#FF0000"); // Red
+        colorPanel.SetActive(false); // Hide the color panel
+    }
+
+    // Method to handle red color button click
+    public void OnBlackColorButtonClick()
+    {
+        ApplyColorFormatting("color", "#000000"); // Black
+        colorPanel.SetActive(false); // Hide the color panel
     }
 
     // Method to handle green color button click
     public void OnGreenColorButtonClick()
     {
-        ApplyColorFormatting("color", "11CB11"); // Green
+        ApplyColorFormatting("color", "#00FF00"); // Green
+        colorPanel.SetActive(false); // Hide the color panel
     }
 
     // Method to handle blue color button click
     public void OnBlueColorButtonClick()
     {
         ApplyColorFormatting("color", "#0000FF"); // Blue
+        colorPanel.SetActive(false); // Hide the color panel
     }
 
-    // Method to handle blue color button click
-    public void OnBlackColorButtonClick()
-    {
-        ApplyColorFormatting("color", "000000"); // Blue
-    }
-
-    ////  Highlight Button Functionality
-    //public void OnHighlightButtonClick()
-    //{
-    //    highlightcolorPanel.SetActive(true); // Show the color panel
-    //}
-
-    //// Method to handle red color button click
-    //public void OnYellowHighlightButtonClick()
-    //{
-    //    ApplyHighlightFormatting("#FFFF00"); // Yellow
-    //}
-
-    //// Method to handle green color button click
-    //public void OnCyanHighlightButtononClick()
-    //{
-    //    ApplyHighlightFormatting("#00FFFF"); // Cynac
-    //}
-
-    //// Method to handle blue color button click
-    //public void OnMagentaHighlightButtononClick()
-    //{
-    //    ApplyHighlightFormatting("#FF00FF"); // Magenta
-    //}
-
-    //// Method to handle blue color button click
-    //public void OnGrayHighlightButtonClick()
-    //{
-    //    ApplyHighlightFormatting("#808080"); // Gray
-    //}
-
-    // Private method to apply highlight formatting
-    //private void ApplyHighlightFormatting(string colorCode)
-    //{
-    //    int selectionStart = textAreaField.selectionStringAnchorPosition;
-    //    int selectionEnd = textAreaField.selectionStringFocusPosition;
-
-    //    if (selectionStart > selectionEnd)
-    //    {
-    //        int temp = selectionStart;
-    //        selectionStart = selectionEnd;
-    //        selectionEnd = temp;
-    //    }
-
-    //    if (selectionStart == selectionEnd) return; // No text selected
-
-    //    string text = textAreaField.text;
-    //    string selectedText = text.Substring(selectionStart, selectionEnd - selectionStart);
-
-    //    textAreaField.richText = true;
-    //    string formattedText = $"<mark={colorCode}>{selectedText}</mark>"; // Use "mark" tag
-
-    //    textAreaField.text = text.Substring(0, selectionStart) + formattedText + text.Substring(selectionEnd);
-    //    SaveCurrentStateForUndo();
-
-    //    int newCursorPos = selectionStart + formattedText.Length;
-    //    textAreaField.caretPosition = newCursorPos;
-
-    //    // Reset the selection range to the new cursor position
-    //    textAreaField.selectionStringAnchorPosition = newCursorPos;
-    //    textAreaField.selectionStringFocusPosition = newCursorPos;
-    //}
 
     private void ApplyColorFormatting(string tag, string colorCode)
     {
