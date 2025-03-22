@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PracticalManager : MonoBehaviour
 {
@@ -19,7 +20,26 @@ public class PracticalManager : MonoBehaviour
     };
 
     public GameObject paperRider; // Reference to the Paper Rider object
+    public Transform table; // Reference to the table's Transform
     public float animationDuration = 1f; // Duration of the paper rider removal animation
+
+    public GameObject popupPanel; // Reference to the Popup Panel
+    public TextMeshProUGUI popupText; // Reference to the Popup Text
+    public Button addValuesButton; // Reference to the Add Values Button
+
+    public TextMeshProUGUI[] lengthTexts; // References to the Length Text fields in the table
+    public TextMeshProUGUI[] weightTexts; // References to the Weight Text fields in the table
+
+    private int currentSetIndex = 0; // Track which set of values is being filled
+
+    private void Start()
+    {
+        // Hide the popup panel at the start
+        popupPanel.SetActive(false);
+
+        // Add a listener to the Add Values button
+        addValuesButton.onClick.AddListener(AddValuesToTable);
+    }
 
     private void Update()
     {
@@ -54,18 +74,21 @@ public class PracticalManager : MonoBehaviour
             if (Mathf.Abs(currentLength - value.length) < 1f && Mathf.Abs(currentWeight - value.weight) < 0.1f)
             {
                 // Trigger the paper rider removal animation
-                StartCoroutine(RemovePaperRider());
+                StartCoroutine(MovePaperRiderToTable(currentLength, currentWeight));
                 break;
             }
         }
     }
 
-    private System.Collections.IEnumerator RemovePaperRider()
+    private System.Collections.IEnumerator MovePaperRiderToTable(float length, float weight)
     {
-        // Simple animation: Move the paper rider downward
+        // Get the starting position of the paper rider
         Vector3 startPosition = paperRider.transform.position;
-        Vector3 endPosition = startPosition + Vector3.down * 2f; // Move downward by 2 units
 
+        // Get the target position (table's position)
+        Vector3 endPosition = new Vector3(startPosition.x, table.position.y, startPosition.z);
+
+        // Animate the paper rider moving downward
         float elapsedTime = 0f;
         while (elapsedTime < animationDuration)
         {
@@ -74,7 +97,37 @@ public class PracticalManager : MonoBehaviour
             yield return null;
         }
 
-        // Disable the paper rider after the animation
-        paperRider.SetActive(false);
+        // Ensure the paper rider is exactly at the table's position
+        paperRider.transform.position = endPosition;
+
+        // Show the popup panel with the length and weight values
+        ShowPopup(length, weight);
+    }
+
+    private void ShowPopup(float length, float weight)
+    {
+        // Update the popup text
+        popupText.text = $"Paper rider removes at length: {length:F2} cm and weight: {weight:F2} kg";
+
+        // Show the popup panel
+        popupPanel.SetActive(true);
+    }
+
+    private void AddValuesToTable()
+    {
+        // Add the values to the table
+        if (currentSetIndex < lengthTexts.Length && currentSetIndex < weightTexts.Length)
+        {
+            float currentLength = movableBridge.GetCurrentLength();
+            float currentWeight = weightHanger.totalWeight;
+
+            lengthTexts[currentSetIndex].text = $"{currentLength:F2} cm";
+            weightTexts[currentSetIndex].text = $"{currentWeight:F2} kg";
+
+            currentSetIndex++; // Move to the next set
+        }
+
+        // Hide the popup panel
+        popupPanel.SetActive(false);
     }
 }
