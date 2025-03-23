@@ -4,9 +4,9 @@ using TMPro;
 
 public class PracticalManager : MonoBehaviour
 {
-    public Toggle paperRiderToggle; // Reference to the Paper Rider Position Toggle
-    public Toggle tuningForkToggle; // Reference to the Tuning Fork Touch Sonometer Toggle
-    public Toggle allConditionsToggle; // Reference to the Toggle for all conditions
+    public Toggle paperRiderToggle; 
+    public Toggle tuningForkToggle;
+    public Toggle allConditionsToggle;
     public AudioSource sonometerAudioSource; // Reference to the Sonometer AudioSource
     public WeightHanger weightHanger; // Reference to the WeightHanger script
     public MovableBridge movableBridge; // Reference to the MovableBridge script
@@ -14,18 +14,22 @@ public class PracticalManager : MonoBehaviour
     // Define 3 sets of correct values (length in cm, weight in kg)
     private readonly (float length, float weight)[] correctValues = new (float, float)[]
     {
-        (30f, 1.5f), // Example: 30 cm length, 1.5 kg weight
-        (40f, 2.0f), // Example: 40 cm length, 2.0 kg weight
-        (50f, 2.5f)  // Example: 50 cm length, 2.5 kg weight
+        (30f, 0.5f), // Example: 30 cm length, 0.5 kg weight
+        (40f, 1.0f), // Example: 40 cm length, 1.0 kg weight
+        (50f, 1.5f)  // Example: 50 cm length, 1.5 kg weight
     };
 
-    public GameObject paperRider; // Reference to the Paper Rider object
+    public GameObject paperRider;
     public Transform table; // Reference to the table's Transform
     public float animationDuration = 1f; // Duration of the paper rider removal animation
 
-    public GameObject popupPanel; // Reference to the Popup Panel
-    public TextMeshProUGUI popupText; // Reference to the Popup Text
-    public Button addValuesButton; // Reference to the Add Values Button
+    public GameObject popupPanel;
+    public TextMeshProUGUI popupText;
+    public Button addValuesButton;
+    public Button closeButton;
+
+    public Image statusCircle; // Reference to the Status Circle Image
+    public TextMeshProUGUI statusText; // Reference to the Status Text
 
     public TextMeshProUGUI[] lengthTexts; // References to the Length Text fields in the table
     public TextMeshProUGUI[] weightTexts; // References to the Weight Text fields in the table
@@ -39,7 +43,14 @@ public class PracticalManager : MonoBehaviour
 
         // Add a listener to the Add Values button
         addValuesButton.onClick.AddListener(AddValuesToTable);
+
+        // Add a listener to the Close Button
+        closeButton.onClick.AddListener(ClosePopup);
+
+        // Initialize the status UI
+        UpdateStatusUI();
     }
+
 
     private void Update()
     {
@@ -115,19 +126,52 @@ public class PracticalManager : MonoBehaviour
 
     private void AddValuesToTable()
     {
-        // Add the values to the table
-        if (currentSetIndex < lengthTexts.Length && currentSetIndex < weightTexts.Length)
+        // Check if there are available slots in the table
+        if (currentSetIndex >= lengthTexts.Length || currentSetIndex >= weightTexts.Length)
         {
-            float currentLength = movableBridge.GetCurrentLength();
-            float currentWeight = weightHanger.totalWeight;
-
-            lengthTexts[currentSetIndex].text = $"{currentLength:F2} cm";
-            weightTexts[currentSetIndex].text = $"{currentWeight:F2} kg";
-
-            currentSetIndex++; // Move to the next set
+            Debug.Log("All value sets have been filled.");
+            return;
         }
+
+        // Get the current length and weight
+        float currentLength = movableBridge.GetCurrentLength();
+        float currentWeight = weightHanger.totalWeight;
+
+        // Update the table with the current values
+        lengthTexts[currentSetIndex].text = $"{currentLength:F2} cm";
+        weightTexts[currentSetIndex].text = $"{currentWeight:F2} kg";
+
+        // Move to the next set
+        currentSetIndex++;
+
+        // Update the status UI
+        UpdateStatusUI();
 
         // Hide the popup panel
         popupPanel.SetActive(false);
     }
+
+    private void UpdateStatusUI()
+    {
+        if (currentSetIndex >= lengthTexts.Length || currentSetIndex >= weightTexts.Length)
+        {
+            // All value sets are filled
+            statusCircle.color = Color.green; // Change circle color to green
+            statusText.text = "Done"; // Change text to "Done"
+        }
+        else
+        {
+            // Practical is still in progress
+            statusCircle.color = Color.yellow; // Set circle color to yellow
+            statusText.text = "In Progress"; // Set text to "In Progress"
+        }
+    }
+
+    private void ClosePopup()
+    {
+        // Hide the popup panel
+        popupPanel.SetActive(false);
+    }
+
+
 }
