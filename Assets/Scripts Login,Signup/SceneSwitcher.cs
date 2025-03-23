@@ -93,4 +93,16 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadScene("NoteSaver");
     }
 
+    // Function to load the HelpCenterHomePage 
+    public void LoadHelpCenterHome()
+    {
+        SceneManager.LoadScene("HelpCenterHome");
+    }
+
+    // Function to load the SettingsPage 
+    public void LoadSettings()
+    {
+        SceneManager.LoadScene("Settings");
+    }
+
 }
