@@ -62,10 +62,6 @@ public class SessionManager : MonoBehaviour
                 Debug.Log("Redirecting to Physics List"); // Debug redirection
                 SceneManager.LoadScene("PhysicsList");
             }
-            else
-            {
-                Debug.LogWarning("Unknown practical type: " + practicalType); // Debug unknown type
-            }
         }
         else if (statusText.text == "Done")
         {
@@ -76,14 +72,13 @@ public class SessionManager : MonoBehaviour
             float currentProgress = PlayerPrefs.GetFloat("Progress", 0f);
             currentProgress += 10f; // Increase progress by 10%
             PlayerPrefs.SetFloat("Progress", currentProgress);
+
+            // Save the practical type
+            PlayerPrefs.SetString("PracticalType", practicalType); // Save practical type
             PlayerPrefs.Save();
 
             // Load the End Screen scene
             SceneManager.LoadScene("EndOfThePractical");
-        }
-        else
-        {
-            Debug.LogWarning("Unknown status: " + statusText.text); // Debug unknown status
         }
     }
 
