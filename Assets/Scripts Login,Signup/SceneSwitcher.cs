@@ -87,4 +87,10 @@ public class SceneSwitcher : MonoBehaviour
         SceneManager.LoadScene("QuizSonometer");
     }
 
+    // Function to load the NoteSaverPage 
+    public void LoadNoteSaver()
+    {
+        SceneManager.LoadScene("NoteSaver");
+    }
+
 }
