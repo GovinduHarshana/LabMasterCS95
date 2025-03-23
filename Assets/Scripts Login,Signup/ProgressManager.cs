@@ -10,6 +10,12 @@ public class ProgressManager : MonoBehaviour
     void Start()
     {
         LoadAndUpdateProgress();
+
+        // Load progress from PlayerPrefs
+        float progress = PlayerPrefs.GetFloat("Progress", 0f);
+
+        // Update the progress bar and text
+        UpdateProgress(progress);
     }
 
     private void LoadAndUpdateProgress()

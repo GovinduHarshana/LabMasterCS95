@@ -14,9 +14,9 @@ public class PracticalManager : MonoBehaviour
     // Define 3 sets of correct values (length in cm, weight in kg)
     private readonly (float length, float weight)[] correctValues = new (float, float)[]
     {
-        (30f, 1.5f), // Example: 30 cm length, 1.5 kg weight
-        (40f, 2.0f), // Example: 40 cm length, 2.0 kg weight
-        (50f, 2.5f)  // Example: 50 cm length, 2.5 kg weight
+        (30f, 0.5f), // Example: 30 cm length, 0.5 kg weight
+        (40f, 1.0f), // Example: 40 cm length, 1.0 kg weight
+        (50f, 1.5f)  // Example: 50 cm length, 1.5 kg weight
     };
 
     public GameObject paperRider; // Reference to the Paper Rider object

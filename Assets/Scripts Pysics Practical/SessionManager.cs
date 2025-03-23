@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SessionManager : MonoBehaviour
@@ -7,6 +8,13 @@ public class SessionManager : MonoBehaviour
     // Top Panel References
     public TextMeshProUGUI timerText;
     public GameObject endSessionPopup;
+
+    // Practical Status References
+    public Image statusCircle; // Reference to the status circle
+    public TextMeshProUGUI statusText; // Reference to the status text
+
+    // Practical Type (Chemistry or Physics)
+    public string practicalType; // Set this in the Inspector
 
     // Timer Variables
     private float sessionTime = 0f;
@@ -39,17 +47,44 @@ public class SessionManager : MonoBehaviour
     // Method to handle the "Yes" button in the popup
     public void OnYesButtonClicked()
     {
-        // Save the session time
-        PlayerPrefs.SetFloat("SessionTime", sessionTime);
+        Debug.Log("Status Text: " + statusText.text); // Debug status text
+        Debug.Log("Practical Type: " + practicalType); // Debug practical type
 
-        // Update progress (increase by 10%)
-        float currentProgress = PlayerPrefs.GetFloat("Progress", 0f);
-        currentProgress += 10f; // Increase progress by 10%
-        PlayerPrefs.SetFloat("Progress", currentProgress);
-        PlayerPrefs.Save();
+        if (statusText.text == "In Progress")
+        {
+            if (practicalType == "Chemistry")
+            {
+                Debug.Log("Redirecting to Chemistry List"); // Debug redirection
+                SceneManager.LoadScene("ChemistryList");
+            }
+            else if (practicalType == "Physics")
+            {
+                Debug.Log("Redirecting to Physics List"); // Debug redirection
+                SceneManager.LoadScene("PhysicsList");
+            }
+            else
+            {
+                Debug.LogWarning("Unknown practical type: " + practicalType); // Debug unknown type
+            }
+        }
+        else if (statusText.text == "Done")
+        {
+            // Save the session time
+            PlayerPrefs.SetFloat("SessionTime", sessionTime);
 
-        // Load the End Screen scene
-        SceneManager.LoadScene("EndOfThePractical");
+            // Update progress (increase by 10%)
+            float currentProgress = PlayerPrefs.GetFloat("Progress", 0f);
+            currentProgress += 10f; // Increase progress by 10%
+            PlayerPrefs.SetFloat("Progress", currentProgress);
+            PlayerPrefs.Save();
+
+            // Load the End Screen scene
+            SceneManager.LoadScene("EndOfThePractical");
+        }
+        else
+        {
+            Debug.LogWarning("Unknown status: " + statusText.text); // Debug unknown status
+        }
     }
 
     // Method to handle the "No" button in the popup
