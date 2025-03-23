@@ -14,7 +14,6 @@ public class SlidingMenu : MonoBehaviour
     // UI elements to update with user data
     public TextMeshProUGUI menuNameText;
     public TextMeshProUGUI menuRoleText;
-   
 
     private Vector2 hiddenPosition = new Vector2(-600, -540); // Off-screen position
     private Vector2 visiblePosition = new Vector2(0, -540);   // Visible position
@@ -34,23 +33,23 @@ public class SlidingMenu : MonoBehaviour
         // Initially hide the background overlay
         backgroundOverlay.SetActive(false);
 
-        // Update menu UI with user data
+        // Ensure menu updates on startup
         UpdateMenuUI();
 
-        // Subscribe to the event, so when the user data is updated, the menu will also update.
+        // Subscribe to user data updates if available
         if (UserDataManager.Instance != null)
         {
             UserDataManager.OnUserDataLoaded += UpdateMenuUI;
         }
         else
         {
-            Debug.LogError("UserDataManager not found!");
+            Debug.LogError(" UserDataManager not found!");
         }
     }
 
     void OnDestroy()
     {
-        // Unsubscribe from the event, so no errors when the menu is destroyed.
+        // Unsubscribe to avoid errors when the menu is destroyed
         if (UserDataManager.Instance != null)
         {
             UserDataManager.OnUserDataLoaded -= UpdateMenuUI;
@@ -63,7 +62,8 @@ public class SlidingMenu : MonoBehaviour
         {
             StartCoroutine(SlideMenu(visiblePosition));
             isOpen = true;
-            backgroundOverlay.SetActive(true); // Show the click-outside button
+            backgroundOverlay.SetActive(true); // Show background overlay
+            UpdateMenuUI(); // Ensure latest user data is shown
         }
     }
 
@@ -73,7 +73,7 @@ public class SlidingMenu : MonoBehaviour
         {
             StartCoroutine(SlideMenu(hiddenPosition));
             isOpen = false;
-            backgroundOverlay.SetActive(false); // Hide the click-outside button
+            backgroundOverlay.SetActive(false); // Hide background overlay
         }
     }
 
@@ -96,12 +96,15 @@ public class SlidingMenu : MonoBehaviour
     {
         if (UserDataManager.Instance != null)
         {
-            // Update name and role
-            menuNameText.text = UserDataManager.Instance.userName;
-            menuRoleText.text = UserDataManager.Instance.userRole;
+            // Fetch data from UserDataManager
+            string userName = PlayerPrefs.GetString("userName", "Guest");
+            string userRole = PlayerPrefs.GetString("userRole", "Unknown");
 
+            // Update UI elements
+            menuNameText.text = userName;
+            menuRoleText.text = userRole;
+
+            Debug.Log($" Menu Updated - Name: {userName}, Role: {userRole}");
         }
     }
-
-    
 }
