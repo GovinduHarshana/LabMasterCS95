@@ -1,3 +1,4 @@
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Text;
 using UnityEngine.Networking;
-using System;
 using UnityEngine.EventSystems;
 
 public class NoteEditorController : MonoBehaviour
@@ -39,8 +39,10 @@ public class NoteEditorController : MonoBehaviour
     [SerializeField] private Button blueColorButton;
     [SerializeField] private Button blackColorButton;
 
-    [Header("MongoDB Settings")]
-    [SerializeField] private string mongoDBAPIUrl = "https://yourapi.com/savenote";
+    [Header("API Settings")]
+    [SerializeField] private string apiBaseUrl = "http://localhost:5000/api";
+    [SerializeField] private string userId = "64f5e81234567890abcdef01"; // Replace with a valid MongoDB ObjectId
+    [SerializeField] private string authToken = ""; // This could be set after login
 
     // For undo/redo functionality
     private List<string> undoStack = new List<string>();
@@ -66,6 +68,16 @@ public class NoteEditorController : MonoBehaviour
 
         colorPanel.SetActive(false);
 
+        // Add listener for the save button if it's not already set in the editor
+        if (saveButton != null && saveButton.onClick.GetPersistentEventCount() == 0)
+        {
+            saveButton.onClick.AddListener(OnSaveButtonClick);
+        }
+
+        // Log configured endpoints for debugging
+        Debug.Log($"API Base URL: {apiBaseUrl}");
+        Debug.Log($"Create Note Endpoint: {apiBaseUrl}/note/createNote");
+        Debug.Log($"Retrieve Notes Endpoint: {apiBaseUrl}/note/retrieveNote");
     }
 
     void Update()
@@ -257,7 +269,6 @@ public class NoteEditorController : MonoBehaviour
         colorPanel.SetActive(false); // Hide the color panel
     }
 
-
     private void ApplyColorFormatting(string tag, string colorCode)
     {
         int selectionStart = textAreaField.selectionStringAnchorPosition;
@@ -286,7 +297,6 @@ public class NoteEditorController : MonoBehaviour
         textAreaField.selectionStringAnchorPosition = newCursorPos; //Reset selection so the next typed text will not be formatted
         textAreaField.selectionStringFocusPosition = newCursorPos; //Reset selection so the next typed text will not be formatted
     }
-
 
     private void ApplyFormatting(string tag)
     {
@@ -372,7 +382,7 @@ public class NoteEditorController : MonoBehaviour
             {
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    newText.AppendLine($"• {lines[i]}");
+                    newText.AppendLine($"â€¢ {lines[i]}");
                 }
             }
             else
@@ -426,7 +436,7 @@ public class NoteEditorController : MonoBehaviour
         {
             foreach (string line in lines)
             {
-                if (line.StartsWith("• "))
+                if (line.StartsWith("â€¢ "))
                 {
                     cleanText.AppendLine(line.Substring(2));
                 }
@@ -468,54 +478,171 @@ public class NoteEditorController : MonoBehaviour
             return;
         }
 
-        StartCoroutine(UploadNoteToMongoDB(title, content));
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogError("User ID cannot be empty! Set a valid MongoDB ObjectId.");
+            return;
+        }
+
+        Debug.Log($"Saving note with title: {title}, content: {content}");
+
+        StartCoroutine(CreateNoteInDatabase(title, content));
     }
 
-    private IEnumerator UploadNoteToMongoDB(string title, string content)
+    private IEnumerator CreateNoteInDatabase(string title, string content)
     {
-        // Create the data object to send
+        // Create the data object to send to the server
         NoteData noteData = new NoteData
         {
+            userId = userId,
             title = title,
-            content = content,
-            timestamp = DateTime.UtcNow.ToString("o")
+            content = content
         };
 
         // Convert to JSON
         string jsonData = JsonUtility.ToJson(noteData);
+        Debug.Log("Sending note data: " + jsonData);
 
-        // Create request
-        UnityWebRequest request = new UnityWebRequest(mongoDBAPIUrl, "POST");
-        byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+        // Create the web request with the correct endpoint
+        string createNoteUrl = $"{apiBaseUrl}/note/createNote";
+        UnityWebRequest request = new UnityWebRequest(createNoteUrl, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type", "application/json");
 
-        // Send request
+        // Set headers
+        request.SetRequestHeader("Content-Type", "application/json");
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        }
+
+        // Send the request
         yield return request.SendWebRequest();
 
+        // Handle the response
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Note saved successfully!");
-            // You might want to show a success message to the user
-            // Or clear the fields for a new note
-            // titleField.text = "";
-            // textAreaField.text = "";
-            SaveCurrentStateForUndo();
+            Debug.Log("Note saved successfully: " + request.downloadHandler.text);
+            // Show success message to user
+            // You could implement a UI notification here
         }
         else
         {
             Debug.LogError($"Error saving note: {request.error}");
-            // You might want to show an error message to the user
+            Debug.LogError($"Response: {request.downloadHandler.text}");
+            // Show error message to user
+            // You could implement a UI notification here
         }
     }
-}
 
-// Data structure for sending to MongoDB
-[Serializable]
-public class NoteData
-{
-    public string title;
-    public string content;
-    public string timestamp;
+    // Method to set user credentials (call this after successful login)
+    public void SetUserCredentials(string newUserId, string newAuthToken)
+    {
+        userId = newUserId;
+        authToken = newAuthToken;
+        Debug.Log($"User credentials set: UserId={userId}");
+    }
+
+    // Method to retrieve user's notes (you could add UI to display the notes)
+    public void GetUserNotes()
+    {
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogError("Cannot retrieve notes: User ID not set");
+            return;
+        }
+
+        StartCoroutine(FetchUserNotes());
+    }
+
+    private IEnumerator FetchUserNotes()
+    {
+        string fetchNotesUrl = $"{apiBaseUrl}/note/retrieveNote"; // Changed to match backend
+
+        // Create a JSON object to send in the request body
+        NoteRequest noteRequest = new NoteRequest
+        {
+            userId = userId
+        };
+        string jsonData = JsonUtility.ToJson(noteRequest);
+        Debug.Log($"Retrieving notes for userId: {userId}");
+
+        UnityWebRequest request = new UnityWebRequest(fetchNotesUrl, "POST");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        }
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            string jsonResponse = request.downloadHandler.text;
+            Debug.Log("Notes retrieved: " + jsonResponse);
+
+            try
+            {
+                // Parse the JSON response
+                NotesResponse response = JsonUtility.FromJson<NotesResponse>(jsonResponse);
+
+                // Handle and display the notes in your UI
+                if (response != null && response.notes != null && response.notes.Length > 0)
+                {
+                    Debug.Log($"Retrieved {response.notes.Length} notes");
+                    // Here you would display the notes in your UI
+                    // DisplayNotesInUI(response.notes);
+                }
+                else
+                {
+                    Debug.Log("No notes found for this user");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error parsing JSON response: {e.Message}");
+                Debug.LogError($"Raw response: {jsonResponse}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"Error retrieving notes: {request.error}");
+            Debug.LogError($"Response: {request.downloadHandler.text}");
+        }
+    }
+
+    // You'll implement this method to display notes in your UI
+    private void DisplayNotesInUI(NoteData[] notes)
+    {
+        // TODO: Implement note display in your UI
+        Debug.Log($"Displaying {notes.Length} notes (method not fully implemented)");
+    }
+
+    // Define data structures for JSON serialization/deserialization
+    [Serializable]
+    public class NoteRequest
+    {
+        public string userId;
+    }
+
+    [Serializable]
+    public class NoteData
+    {
+        public string userId;
+        public string title;
+        public string content;
+        // Backend will handle createdAt
+    }
+
+    [Serializable]
+    public class NotesResponse
+    {
+        public NoteData[] notes;
+    }
 }
