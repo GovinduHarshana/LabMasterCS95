@@ -236,13 +236,6 @@ public class QuizManagerNew : MonoBehaviour
 
     public void CompleteQuiz()
     {
-        // Save quiz progress (increase by 50%)
-        float currentQuizProgress = PlayerPrefs.GetFloat("QuizProgress", 0f);
-        currentQuizProgress += 50f; // Increase progress by 50%
-        PlayerPrefs.SetFloat("QuizProgress", currentQuizProgress);
-        PlayerPrefs.Save();
-
-        // Load the End of Quiz scene
         SceneManager.LoadScene("EndOfTheQuiz");
     }
 }
