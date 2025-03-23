@@ -26,9 +26,12 @@ public class PracticalManager : MonoBehaviour
     public GameObject popupPanel; // Reference to the Popup Panel
     public TextMeshProUGUI popupText; // Reference to the Popup Text
     public Button addValuesButton; // Reference to the Add Values Button
+    public Button closeButton; // Reference to the Close Button
+    public Image statusCircle; // Reference to the Status Circle Image
+    public TextMeshProUGUI statusText; // Reference to the Status Text
 
-    public TextMeshProUGUI[] lengthTexts; // References to the Length Text fields in the table
-    public TextMeshProUGUI[] weightTexts; // References to the Weight Text fields in the table
+    public TextMeshProUGUI[] lengthTexts; // Array for Length Text fields
+    public TextMeshProUGUI[] weightTexts; // Array for Weight Text fields
 
     private int currentSetIndex = 0; // Track which set of values is being filled
 
@@ -37,8 +40,13 @@ public class PracticalManager : MonoBehaviour
         // Hide the popup panel at the start
         popupPanel.SetActive(false);
 
-        // Add a listener to the Add Values button
+        // Add listeners to the buttons
         addValuesButton.onClick.AddListener(AddValuesToTable);
+        closeButton.onClick.AddListener(ClosePopup);
+
+        // Initialize the status UI
+        UpdateStatusUI();
+
     }
 
     private void Update()
@@ -115,18 +123,49 @@ public class PracticalManager : MonoBehaviour
 
     private void AddValuesToTable()
     {
-        // Add the values to the table
-        if (currentSetIndex < lengthTexts.Length && currentSetIndex < weightTexts.Length)
+        // Check if there are available slots in the table
+        if (currentSetIndex >= lengthTexts.Length || currentSetIndex >= weightTexts.Length)
         {
-            float currentLength = movableBridge.GetCurrentLength();
-            float currentWeight = weightHanger.totalWeight;
-
-            lengthTexts[currentSetIndex].text = $"{currentLength:F2} cm";
-            weightTexts[currentSetIndex].text = $"{currentWeight:F2} kg";
-
-            currentSetIndex++; // Move to the next set
+            Debug.Log("All value sets have been filled.");
+            return;
         }
 
+        // Get the current length and weight
+        float currentLength = movableBridge.GetCurrentLength();
+        float currentWeight = weightHanger.totalWeight;
+
+        // Update the table with the current values
+        lengthTexts[currentSetIndex].text = $"{currentLength:F2} cm";
+        weightTexts[currentSetIndex].text = $"{currentWeight:F2} kg";
+
+        // Move to the next set
+        currentSetIndex++;
+
+        // Update the status UI
+        UpdateStatusUI();
+
+        // Hide the popup panel
+        popupPanel.SetActive(false);
+    }
+
+    private void UpdateStatusUI()
+    {
+        if (currentSetIndex >= lengthTexts.Length || currentSetIndex >= weightTexts.Length)
+        {
+            // All value sets are filled
+            statusCircle.color = Color.green; // Change circle color to green
+            statusText.text = "Done"; // Change text to "Done"
+        }
+        else
+        {
+            // Practical is still in progress
+            statusCircle.color = Color.yellow; // Set circle color to yellow
+            statusText.text = "In Progress"; // Set text to "In Progress"
+        }
+    }
+
+    private void ClosePopup()
+    {
         // Hide the popup panel
         popupPanel.SetActive(false);
     }
