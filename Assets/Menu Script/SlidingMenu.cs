@@ -20,6 +20,11 @@ public class SlidingMenu : MonoBehaviour
     private bool isOpen = false;
     private float slideSpeed = 0.3f; // Adjust for faster/slower slide
 
+    public ProgressManager progressManager;
+    public ProgressUpdater progressUpdater;
+    public Button resetButton;
+
+
     void Start()
     {
         // Set initial menu position (hidden)
@@ -64,6 +69,10 @@ public class SlidingMenu : MonoBehaviour
             isOpen = true;
             backgroundOverlay.SetActive(true); // Show background overlay
             UpdateMenuUI(); // Ensure latest user data is shown
+
+            if (progressManager != null) progressManager.HideProgressBar();
+            if (progressUpdater != null) progressUpdater.HideProgressCircles();
+            if (resetButton != null) resetButton.gameObject.SetActive(false);
         }
     }
 
@@ -74,6 +83,10 @@ public class SlidingMenu : MonoBehaviour
             StartCoroutine(SlideMenu(hiddenPosition));
             isOpen = false;
             backgroundOverlay.SetActive(false); // Hide background overlay
+
+            if (progressManager != null) progressManager.ShowProgressBar();
+            if (progressUpdater != null) progressUpdater.ShowProgressCircles();
+            if (resetButton != null) resetButton.gameObject.SetActive(true);
         }
     }
 

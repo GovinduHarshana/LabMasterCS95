@@ -43,6 +43,8 @@ public class ProgressUpdater : MonoBehaviour
                 quizProgressText.text = (quizFill * 100).ToString("F0") + "%";
             }
         }
+
+
     }
 
     [System.Serializable]
@@ -52,5 +54,28 @@ public class ProgressUpdater : MonoBehaviour
         public int totalPracticals;
         public int quizzesCompleted;
         public int totalQuizzes;
+    }
+
+    public void HideProgressCircles()
+    {
+        if (practicalProgressCircle != null && quizProgressCircle != null && practicalProgressText != null && quizProgressText != null)
+        {
+            practicalProgressCircle.gameObject.SetActive(false);
+            quizProgressCircle.gameObject.SetActive(false);
+            practicalProgressText.gameObject.SetActive(false);
+            quizProgressText.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowProgressCircles()
+    {
+        if (practicalProgressCircle != null && quizProgressCircle != null && practicalProgressText != null && quizProgressText != null)
+        {
+            practicalProgressCircle.gameObject.SetActive(true);
+            quizProgressCircle.gameObject.SetActive(true);
+            practicalProgressText.gameObject.SetActive(true);
+            quizProgressText.gameObject.SetActive(true);
+            StartCoroutine(FetchUserProgress()); // Refresh data when showing
+        }
     }
 }

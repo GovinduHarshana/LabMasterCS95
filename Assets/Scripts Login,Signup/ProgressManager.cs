@@ -9,23 +9,19 @@ public class ProgressManager : MonoBehaviour
 
     void Start()
     {
-        // Load progress from PlayerPrefs
-        float progress = PlayerPrefs.GetFloat("Progress", 0f);
+        LoadAndUpdateProgress();
+    }
 
-        // Update the progress bar and text
+    private void LoadAndUpdateProgress()
+    {
+        float progress = PlayerPrefs.GetFloat("Progress", 0f);
         UpdateProgress(progress);
     }
 
-    // Method to update the progress bar and text
     private void UpdateProgress(float progress)
     {
-        // Ensure progress does not exceed 100%
         progress = Mathf.Clamp(progress, 0f, 100f);
-
-        // Update the progress bar fill amount
         progressBar.fillAmount = progress / 100f;
-
-        // Update the progress text
         progressText.text = $"{progress:F0}%";
     }
 
@@ -37,5 +33,25 @@ public class ProgressManager : MonoBehaviour
 
         // Update the progress bar and text
         UpdateProgress(0f);
+    }
+
+    // Add methods for hiding and showing the progress bar
+    public void HideProgressBar()
+    {
+        if (progressBar != null && progressText != null)
+        {
+            progressBar.gameObject.SetActive(false);
+            progressText.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowProgressBar()
+    {
+        if (progressBar != null && progressText != null)
+        {
+            progressBar.gameObject.SetActive(true);
+            progressText.gameObject.SetActive(true);
+            LoadAndUpdateProgress(); // Refresh progress when showing
+        }
     }
 }
