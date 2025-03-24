@@ -40,9 +40,10 @@ public class NoteEditorController : MonoBehaviour
     [SerializeField] private Button blackColorButton;
 
     [Header("API Settings")]
-    [SerializeField] private string apiBaseUrl = "http://localhost:5000/api";
-    [SerializeField] private string userId = "64f5e81234567890abcdef01"; // Replace with a valid MongoDB ObjectId
-    [SerializeField] private string authToken = ""; // This could be set after login
+    [SerializeField] private string apiBaseUrl = "https://lab-master-backend.vercel.app/api";
+    private string userId = ""; // Retrieved from PlayerPrefs
+    private string authToken = ""; // Set after login
+    private string currentNoteId = ""; // Track the currently loaded note
 
     // For undo/redo functionality
     private List<string> undoStack = new List<string>();
@@ -59,6 +60,20 @@ public class NoteEditorController : MonoBehaviour
 
     void Start()
     {
+        // Get userId from PlayerPrefs (set during login)
+        userId = PlayerPrefs.GetString("userId", "");
+        string userName = PlayerPrefs.GetString("userName", "Unknown User");
+
+        // Check if user is logged in
+        if (string.IsNullOrEmpty(userId))
+        {
+            Debug.LogWarning("No user ID found in PlayerPrefs. User may not be logged in properly.");
+        }
+        else
+        {
+            Debug.Log($"User logged in: {userName} (ID: {userId})");
+        }
+
         // Initialize state
         SaveCurrentStateForUndo();
 
@@ -68,10 +83,48 @@ public class NoteEditorController : MonoBehaviour
 
         colorPanel.SetActive(false);
 
-        // Add listener for the save button if it's not already set in the editor
+        // Set up button listeners
         if (saveButton != null && saveButton.onClick.GetPersistentEventCount() == 0)
         {
             saveButton.onClick.AddListener(OnSaveButtonClick);
+        }
+
+        // Connect color button listeners
+        if (redColorButton != null)
+        {
+            redColorButton.onClick.AddListener(OnRedColorButtonClick);
+        }
+
+        if (greenColorButton != null)
+        {
+            greenColorButton.onClick.AddListener(OnGreenColorButtonClick);
+        }
+
+        if (blueColorButton != null)
+        {
+            blueColorButton.onClick.AddListener(OnBlueColorButtonClick);
+        }
+
+        if (blackColorButton != null)
+        {
+            blackColorButton.onClick.AddListener(OnBlackColorButtonClick);
+        }
+
+        if (NoteSceneManager.Instance != null)
+        {
+            string loadedNoteId = NoteSceneManager.Instance.GetCurrentNoteId();
+            if (!string.IsNullOrEmpty(loadedNoteId))
+            {
+                // Load the existing note data
+                currentNoteId = loadedNoteId;
+                titleField.text = NoteSceneManager.Instance.GetCurrentNoteTitle();
+                textAreaField.text = NoteSceneManager.Instance.GetCurrentNoteContent();
+
+                // Reset undo/redo state
+                undoStack.Clear();
+                redoStack.Clear();
+                SaveCurrentStateForUndo();
+            }
         }
 
         // Log configured endpoints for debugging
@@ -248,7 +301,7 @@ public class NoteEditorController : MonoBehaviour
         colorPanel.SetActive(false); // Hide the color panel
     }
 
-    // Method to handle red color button click
+    // Method to handle black color button click
     public void OnBlackColorButtonClick()
     {
         ApplyColorFormatting("color", "#000000"); // Black
@@ -474,19 +527,28 @@ public class NoteEditorController : MonoBehaviour
         if (string.IsNullOrEmpty(title))
         {
             Debug.LogError("Title cannot be empty!");
-            // You might want to show a UI message to the user here
             return;
         }
 
+        // Check if user is logged in (userId available from PlayerPrefs)
         if (string.IsNullOrEmpty(userId))
         {
-            Debug.LogError("User ID cannot be empty! Set a valid MongoDB ObjectId.");
+            Debug.LogError("User ID is empty. User may not be logged in.");
             return;
         }
 
-        Debug.Log($"Saving note with title: {title}, content: {content}");
+        Debug.Log($"Saving note with title: {title}, content length: {content.Length} characters, for user: {userId}");
 
-        StartCoroutine(CreateNoteInDatabase(title, content));
+        if (string.IsNullOrEmpty(currentNoteId))
+        {
+            // Create new note
+            StartCoroutine(CreateNoteInDatabase(title, content));
+        }
+        else
+        {
+            // Update existing note
+            StartCoroutine(UpdateNoteInDatabase(currentNoteId, title, content));
+        }
     }
 
     private IEnumerator CreateNoteInDatabase(string title, string content)
@@ -524,27 +586,119 @@ public class NoteEditorController : MonoBehaviour
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("Note saved successfully: " + request.downloadHandler.text);
-            // Show success message to user
-            // You could implement a UI notification here
+
+            // Parse response to get the note ID
+            try
+            {
+                NoteResponse response = JsonUtility.FromJson<NoteResponse>(request.downloadHandler.text);
+                if (response != null && !string.IsNullOrEmpty(response.noteId))
+                {
+                    currentNoteId = response.noteId;
+                    Debug.Log($"New note created with ID: {currentNoteId}");
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error parsing response: {e.Message}");
+            }
+
+            // Show a success message to the user (you could add a UI element for this)
+            Debug.Log("Note saved successfully!");
         }
         else
         {
             Debug.LogError($"Error saving note: {request.error}");
             Debug.LogError($"Response: {request.downloadHandler.text}");
-            // Show error message to user
-            // You could implement a UI notification here
         }
     }
 
-    // Method to set user credentials (call this after successful login)
-    public void SetUserCredentials(string newUserId, string newAuthToken)
+    private IEnumerator UpdateNoteInDatabase(string noteId, string title, string content)
     {
-        userId = newUserId;
-        authToken = newAuthToken;
-        Debug.Log($"User credentials set: UserId={userId}");
+        // Create the data object to send to the server
+        UpdateNoteData updateData = new UpdateNoteData
+        {
+            noteId = noteId,
+            userId = userId,
+            title = title,
+            content = content
+        };
+
+        // Convert to JSON
+        string jsonData = JsonUtility.ToJson(updateData);
+        Debug.Log($"Updating note {noteId}: " + jsonData);
+
+        // Create the web request with the correct endpoint
+        string updateNoteUrl = $"{apiBaseUrl}/note/updateNote";
+        UnityWebRequest request = new UnityWebRequest(updateNoteUrl, "PUT");
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonData);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+
+        // Set headers
+        request.SetRequestHeader("Content-Type", "application/json");
+        if (!string.IsNullOrEmpty(authToken))
+        {
+            request.SetRequestHeader("Authorization", "Bearer " + authToken);
+        }
+
+        // Send the request
+        yield return request.SendWebRequest();
+
+        // Handle the response
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            Debug.Log("Note updated successfully: " + request.downloadHandler.text);
+            // Show a success message to the user
+        }
+        else
+        {
+            Debug.LogError($"Error updating note: {request.error}");
+            Debug.LogError($"Response: {request.downloadHandler.text}");
+        }
     }
 
-    // Method to retrieve user's notes (you could add UI to display the notes)
+    // Method to show notes panel and retrieve user's notes
+    public void ShowNotesPanel()
+    {
+        if (NoteSceneManager.Instance != null)
+        {
+            NoteSceneManager.Instance.LoadNotesListScene();
+        }
+        else
+        {
+            Debug.LogError("NoteSceneManager instance not found!");
+        }
+    }
+
+    
+    // Method to create a new note
+    public void CreateNewNote()
+    {
+        // Clear the editor
+        titleField.text = "";
+        textAreaField.text = "";
+        currentNoteId = ""; // Reset current note ID
+
+        // Reset undo/redo state
+        undoStack.Clear();
+        redoStack.Clear();
+        SaveCurrentStateForUndo();
+    }
+
+    // Method to load a note into the editor
+    public void LoadNoteToEditor(string noteId, string title, string content)
+    {
+        currentNoteId = noteId;
+        titleField.text = title;
+        textAreaField.text = content;
+
+        // Reset undo/redo state
+        undoStack.Clear();
+        redoStack.Clear();
+        SaveCurrentStateForUndo();
+    }
+
+    // Method to retrieve user's notes
     public void GetUserNotes()
     {
         if (string.IsNullOrEmpty(userId))
@@ -596,12 +750,12 @@ public class NoteEditorController : MonoBehaviour
                 if (response != null && response.notes != null && response.notes.Length > 0)
                 {
                     Debug.Log($"Retrieved {response.notes.Length} notes");
-                    // Here you would display the notes in your UI
-                    // DisplayNotesInUI(response.notes);
+                    
                 }
                 else
                 {
                     Debug.Log("No notes found for this user");
+                    
                 }
             }
             catch (Exception e)
@@ -617,12 +771,7 @@ public class NoteEditorController : MonoBehaviour
         }
     }
 
-    // You'll implement this method to display notes in your UI
-    private void DisplayNotesInUI(NoteData[] notes)
-    {
-        // TODO: Implement note display in your UI
-        Debug.Log($"Displaying {notes.Length} notes (method not fully implemented)");
-    }
+    
 
     // Define data structures for JSON serialization/deserialization
     [Serializable]
@@ -634,10 +783,26 @@ public class NoteEditorController : MonoBehaviour
     [Serializable]
     public class NoteData
     {
+        public string noteId;
         public string userId;
         public string title;
         public string content;
-        // Backend will handle createdAt
+        public string createdAt;
+    }
+
+    [Serializable]
+    public class UpdateNoteData
+    {
+        public string noteId;
+        public string userId;
+        public string title;
+        public string content;
+    }
+
+    [Serializable]
+    public class NoteResponse
+    {
+        public string noteId;
     }
 
     [Serializable]

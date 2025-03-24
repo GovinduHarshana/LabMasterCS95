@@ -9,6 +9,7 @@ public class SlidingMenu : MonoBehaviour
     public RectTransform menuPanel;      // Assign the Menu Panel in Inspector
     public Button menuButton;            // Assign the Menu Button
     public Button closeButton;           // Assign the Close Button inside the menu
+    public Button notes;
     public GameObject backgroundOverlay; // Assign the invisible full-screen button
 
     // UI elements to update with user data
