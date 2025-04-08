@@ -94,17 +94,18 @@ public class Login : MonoBehaviour
     {
         // Clear all previously saved user data
         PlayerPrefs.DeleteKey("email");
-        PlayerPrefs.DeleteKey("username");
+        PlayerPrefs.DeleteKey("userName");
         PlayerPrefs.DeleteKey("dob");
         PlayerPrefs.DeleteKey("token");
         PlayerPrefs.DeleteKey("userId");
-        PlayerPrefs.DeleteKey("role");
-        PlayerPrefs.DeleteKey("progress"); 
+        PlayerPrefs.DeleteKey("useRole");
+        PlayerPrefs.DeleteKey("Progress");
+        PlayerPrefs.DeleteKey("QuizProgress");
         PlayerPrefs.DeleteKey("notes");
 
         // Set guest user values
-        PlayerPrefs.SetString("role", "Guest");
-        PlayerPrefs.SetString("username", "Guest User");
+        PlayerPrefs.SetString("userRole", "Guest");
+        PlayerPrefs.SetString("userName", "Guest User");
         PlayerPrefs.Save();
 
         // Navigate to the home scene

@@ -110,9 +110,16 @@ public class SlidingMenu : MonoBehaviour
     {
         if (UserDataManager.Instance != null)
         {
-            // Fetch data from UserDataManager
-            string userName = PlayerPrefs.GetString("userName", "Guest");
-            string userRole = PlayerPrefs.GetString("userRole", "Unknown");
+            // Fetch data from PlayerPrefs (to ensure guest data is handled properly)
+            string userName = PlayerPrefs.GetString("userName", "Guest User");
+            string userRole = PlayerPrefs.GetString("userRole", "Guest");
+
+            // If the user is a guest, ensure the role and username reflect guest info
+            if (userRole == "Guest")
+            {
+                userName = "Guest User";
+                userRole = "Guest";
+            }
 
             // Update UI elements
             menuNameText.text = userName;
