@@ -90,6 +90,27 @@ public class Login : MonoBehaviour
         }
     }
 
+    public void LoginAsGuest()
+    {
+        // Clear all previously saved user data
+        PlayerPrefs.DeleteKey("email");
+        PlayerPrefs.DeleteKey("username");
+        PlayerPrefs.DeleteKey("dob");
+        PlayerPrefs.DeleteKey("token");
+        PlayerPrefs.DeleteKey("userId");
+        PlayerPrefs.DeleteKey("role");
+        PlayerPrefs.DeleteKey("progress"); 
+        PlayerPrefs.DeleteKey("notes");
+
+        // Set guest user values
+        PlayerPrefs.SetString("role", "Guest");
+        PlayerPrefs.SetString("username", "Guest User");
+        PlayerPrefs.Save();
+
+        // Navigate to the home scene
+        UnityEngine.SceneManagement.SceneManager.LoadScene("HomePageNew");
+    }
+
     void DisplayError(string message)
     {
         if (errorMessageText != null)
@@ -112,6 +133,6 @@ public class LoginResponse
 {
     public string message;
     public string userId;
-    public string name;  
-    public string role;  
+    public string name;
+    public string role;
 }

@@ -19,12 +19,35 @@ public class ProfileManager : MonoBehaviour
 
     void Start()
     {
+        // Retrieve user role from PlayerPrefs (added to check for guest role)
+        string userRole = PlayerPrefs.GetString("userRole", "");
+
+        // If user is a guest, skip fetching data from backend and show guest data instead
+        if (userRole == "Guest")
+        {
+            Debug.Log("Guest user detected. Skipping profile fetch.");
+            // Display guest details
+            nameField.text = "Guest User";
+            emailField.text = "N/A";
+            dobField.text = "N/A";
+            mobileField.text = "N/A";
+            nicField.text = "N/A";
+            passwordField.text = "********"; // Hide password for guests
+
+            usernameDisplay.text = "Guest User";
+            roleDisplay.text = "Guest";
+            menuUsername.text = "Guest User"; // Update menu panel
+            menuRole.text = "Guest"; // Update menu panel
+
+            return; // Exit early to prevent backend request
+        }
+
         // Retrieve user ID from PlayerPrefs
         userId = PlayerPrefs.GetString("userId", "");
         if (string.IsNullOrEmpty(userId))
         {
             Debug.LogError("User ID not found in PlayerPrefs. Redirecting to login...");
-            // Redirect user to login page if not logged in
+            // Optionally, you can redirect to login screen if user ID is missing.
             // SceneManager.LoadScene("LoginScene");
             return;
         }
