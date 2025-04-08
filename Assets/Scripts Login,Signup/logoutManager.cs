@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LogoutUIManager : MonoBehaviour
 {
@@ -15,4 +16,18 @@ public class LogoutUIManager : MonoBehaviour
     {
         logoutPanel.SetActive(false);
     }
+
+    public void ConfirmLogout()
+    {
+        PlayerPrefs.DeleteKey("email");
+        PlayerPrefs.DeleteKey("role");
+        PlayerPrefs.DeleteKey("username");
+        PlayerPrefs.DeleteKey("dob");
+        PlayerPrefs.DeleteKey("token");
+        PlayerPrefs.DeleteKey("userId");
+        PlayerPrefs.Save();
+
+        SceneManager.LoadScene("WelcomePage");
+    }
+
 }
