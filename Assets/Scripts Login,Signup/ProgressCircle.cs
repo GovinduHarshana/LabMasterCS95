@@ -1,64 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using UnityEngine.Networking;
+using TMPro;
 
 public class ProgressUpdater : MonoBehaviour
 {
     public Image practicalProgressCircle;
     public Image quizProgressCircle;
-    public Text practicalProgressText;
-    public Text quizProgressText;
-
-    private string userId = "USER_ID_HERE"; 
-    public string progressServerUrl = "https://lab-master-backend.vercel.app/api/progress"; // Vercel URL
+    public TextMeshPro practicalProgressText;
+    public TextMeshPro quizProgressText;
 
     void Start()
     {
-        StartCoroutine(FetchUserProgress());
+        UpdateProgressUI();
     }
 
-    IEnumerator FetchUserProgress()
+    void UpdateProgressUI()
     {
-        using (UnityWebRequest request = UnityWebRequest.Get(progressServerUrl + userId))
-        {
-            yield return request.SendWebRequest();
+        // Get progress from PlayerPrefs instead of server
+        float practicalProgress = PlayerPrefs.GetFloat("Progress", 0f) / 100f;
+        float quizProgress = PlayerPrefs.GetFloat("QuizProgress", 0f) / 100f;
 
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.LogError("Error fetching progress: " + request.error);
-            }
-            else
-            {
-                string jsonResponse = request.downloadHandler.text;
-                ProgressData progress = JsonUtility.FromJson<ProgressData>(jsonResponse);
+        practicalProgressCircle.fillAmount = practicalProgress;
+        quizProgressCircle.fillAmount = quizProgress;
 
-                float practicalFill = (float)progress.practicalsCompleted / progress.totalPracticals;
-                float quizFill = (float)progress.quizzesCompleted / progress.totalQuizzes;
-
-                practicalProgressCircle.fillAmount = practicalFill;
-                quizProgressCircle.fillAmount = quizFill;
-
-                practicalProgressText.text = (practicalFill * 100).ToString("F0") + "%";
-                quizProgressText.text = (quizFill * 100).ToString("F0") + "%";
-            }
-        }
-
-
-    }
-
-    [System.Serializable]
-    public class ProgressData
-    {
-        public int practicalsCompleted;
-        public int totalPracticals;
-        public int quizzesCompleted;
-        public int totalQuizzes;
+        practicalProgressText.text = (practicalProgress * 100).ToString("F0") + "%";
+        quizProgressText.text = (quizProgress * 100).ToString("F0") + "%";
     }
 
     public void HideProgressCircles()
     {
-        if (practicalProgressCircle != null && quizProgressCircle != null && practicalProgressText != null && quizProgressText != null)
+        if (practicalProgressCircle != null && quizProgressCircle != null && 
+            practicalProgressText != null && quizProgressText != null)
         {
             practicalProgressCircle.gameObject.SetActive(false);
             quizProgressCircle.gameObject.SetActive(false);
@@ -69,13 +41,14 @@ public class ProgressUpdater : MonoBehaviour
 
     public void ShowProgressCircles()
     {
-        if (practicalProgressCircle != null && quizProgressCircle != null && practicalProgressText != null && quizProgressText != null)
+        if (practicalProgressCircle != null && quizProgressCircle != null && 
+            practicalProgressText != null && quizProgressText != null)
         {
             practicalProgressCircle.gameObject.SetActive(true);
             quizProgressCircle.gameObject.SetActive(true);
             practicalProgressText.gameObject.SetActive(true);
             quizProgressText.gameObject.SetActive(true);
-            StartCoroutine(FetchUserProgress()); // Refresh data when showing
+            UpdateProgressUI(); // Refresh local data
         }
     }
 }
