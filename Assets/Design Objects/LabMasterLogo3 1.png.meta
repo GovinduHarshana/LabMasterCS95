@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      LabMasterLogo3 1_0: 2455001053656804713
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
